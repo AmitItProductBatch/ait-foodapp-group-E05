@@ -18,17 +18,16 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public void RegisterUser(UserRequestDto dto) {
-		// TODO Auto-generated method stub
 		
 		if (ur.existsByEmail(dto.getEmail())) {
             throw new UserServiceCustomException("Email is already registered", HttpStatus.CONFLICT);
         }
 		
-		if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+		if (dto.getName() == null || dto.getName().isEmpty()) {
 			throw new UserServiceCustomException("Name cannot be empty", HttpStatus.BAD_REQUEST);
 		}
 		
-		if (dto.getAddress() == null || dto.getAddress().trim().isEmpty()) {
+		if (dto.getAddress() == null || dto.getAddress().isEmpty()) {
 			throw new UserServiceCustomException("Address cannot be empty", HttpStatus.BAD_REQUEST);
 		}
 		
