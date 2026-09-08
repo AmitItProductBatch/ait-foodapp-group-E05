@@ -21,6 +21,13 @@ public class User {
 	private String address;
 	private String role;
 	
+	public Long getId() {
+	    return id;
+	}
+
+	public void setId(Long id) {
+	    this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
@@ -59,7 +66,12 @@ public class User {
 		this.role = role;
 	}
 	
-	
-	
+	private boolean emailVerified = true;
 
+	public boolean isEmailVerified() {
+	    return emailVerified;
+	}
+	public void setEmailVerified(boolean emailVerified) {
+	    this.emailVerified = emailVerified;
+	}
 }
