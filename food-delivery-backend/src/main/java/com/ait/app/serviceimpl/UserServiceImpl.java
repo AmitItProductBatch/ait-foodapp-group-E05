@@ -1,5 +1,9 @@
 package com.ait.app.serviceimpl;
 
+
+import java.util.Optional;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -7,6 +11,10 @@ import org.springframework.stereotype.Service;
 import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.User;
 import com.ait.app.repository.UserRepository;
+
+import com.ait.app.requestbody.UserDTO;
+
+
 import com.ait.app.requestbody.UserRequestDto;
 import com.ait.app.service.UserService;
 
@@ -50,4 +58,35 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+
+	@Override
+	public UserDTO getUserById(Long id) {
+		Optional<User> optionalUser = ur.findById(id);
+
+	    if (optionalUser.isEmpty()) {
+	        throw new UserServiceCustomException(
+	                "User not found",
+	                HttpStatus.NOT_FOUND
+	        );
+	    }
+
+	    User u = optionalUser.get();
+	   
+
+	    UserDTO dto = new UserDTO();
+
+	    dto.setId(u.getId());
+	    dto.setName(u.getName());
+	    dto.setEmail(u.getEmail());
+	    dto.setPhNo(u.getPhNo());
+	    dto.setAddress(u.getAddress());
+	    dto.setRole(u.getRole());
+
+	    return dto;
+		
+	}
+
 }
+
+
+
