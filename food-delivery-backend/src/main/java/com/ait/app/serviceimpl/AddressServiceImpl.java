@@ -1,4 +1,4 @@
-package com.ait.app.Service;
+package com.ait.app.serviceimpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ait.app.Dto.AddressDto;
 import com.ait.app.model.Address;
 import com.ait.app.repository.AddressRepo;
+import com.ait.app.service.AddressService;
 
 @Service
 public class AddressServiceImpl implements AddressService {
