@@ -58,10 +58,12 @@ echo -e "\n${CYAN}🔍 Container Health & Status Overview:${NC}"
 ${DOCKER_COMPOSE_CMD} ps
 
 # 6. Output Access Endpoints
+HOST_IP=${SERVER_IP:-194.242.57.93}
 echo -e "\n${GREEN}======================================================${NC}"
 echo -e "${GREEN}🎉 FoodDelivery Stack Deployed Successfully!${NC}"
 echo -e "${GREEN}======================================================${NC}"
-echo -e "👉 ${CYAN}Frontend UI       :${NC} http://localhost:4005"
-echo -e "👉 ${CYAN}Backend REST API  :${NC} http://localhost:8085/api/users"
-echo -e "👉 ${CYAN}PostgreSQL DB     :${NC} localhost:5005 (DB: fooddelivery05)"
+echo -e "👉 ${CYAN}Frontend UI       :${NC} http://${HOST_IP}:4005"
+echo -e "👉 ${CYAN}Backend REST API  :${NC} http://${HOST_IP}:8085/api/users"
+echo -e "👉 ${CYAN}Prometheus Metrics:${NC} http://${HOST_IP}:8085/actuator/prometheus"
+echo -e "👉 ${CYAN}PostgreSQL DB     :${NC} ${HOST_IP}:5005 (DB: fooddelivery05)"
 echo -e "${GREEN}======================================================${NC}"
