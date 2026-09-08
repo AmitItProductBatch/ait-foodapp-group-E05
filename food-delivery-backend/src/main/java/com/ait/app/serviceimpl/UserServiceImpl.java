@@ -16,7 +16,7 @@ import com.ait.app.requestbody.UserDTO;
 
 
 import com.ait.app.requestbody.UserRequestDto;
-import com.ait.app.service.UserService;
+import com.ait.app.Service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService{

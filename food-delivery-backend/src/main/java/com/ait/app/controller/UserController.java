@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.requestbody.UserDTO;
 import com.ait.app.requestbody.UserRequestDto;
-import com.ait.app.service.UserService;
+import com.ait.app.Service.UserService;
 
 
 import com.ait.app.requestbody.UserRequestDto;
-import com.ait.app.service.UserService;
+import com.ait.app.Service.UserService;
 
 @RestController
 @RequestMapping("/users")

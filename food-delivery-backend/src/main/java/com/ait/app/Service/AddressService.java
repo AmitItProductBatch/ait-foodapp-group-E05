@@ -2,7 +2,7 @@ package com.ait.app.Service;
 
 import java.util.List;
 
-import com.ait.app.Dto.AddressDto;
+import com.ait.app.requestbody.AddressDto;
 
 public interface AddressService {
 	
