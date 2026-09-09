@@ -1,4 +1,4 @@
-package com.ait.app.Dto;
+package com.ait.app.requestbody;
 
 public class AddressDto {
 
