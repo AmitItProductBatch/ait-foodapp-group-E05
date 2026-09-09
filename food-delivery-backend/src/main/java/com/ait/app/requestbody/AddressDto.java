@@ -41,8 +41,8 @@ public class AddressDto {
 	public int getPincode() {
 		return pincode;
 	}
-	public void setPincode(int pincode) {
-		this.pincode = pincode;
+	public void setPinCode(int pinCode) {
+		this.pincode = pinCode;
 	}
 	
 	

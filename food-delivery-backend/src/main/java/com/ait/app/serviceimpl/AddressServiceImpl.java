@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.service.AddressService;
+import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.Address;
 import com.ait.app.repository.AddressRepo;
 import com.ait.app.requestbody.AddressDto;
@@ -53,6 +55,9 @@ public class AddressServiceImpl implements AddressService {
     public AddressDto getAddressById(int id) {
 
         Address address = addressRepo.findById(id).orElse(null);
+        if (address == null) {
+			throw new UserServiceCustomException("Address not found", HttpStatus.NOT_FOUND);
+		}
 
         return toDto(address);
     }
@@ -70,7 +75,7 @@ public class AddressServiceImpl implements AddressService {
         dto.setStreetName(address.getStreetName());
         dto.setLandmark(address.getLandmark());
         dto.setCity(address.getCity());
-        dto.setPincode(address.getPinCode());
+        dto.setPinCode(address.getPinCode());
 
         return dto;
     }
