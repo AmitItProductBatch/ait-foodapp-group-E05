@@ -1,4 +1,4 @@
-package com.ait.app.Service;
+package com.ait.app.service;
 
 
 import com.ait.app.requestbody.UserDTO;
