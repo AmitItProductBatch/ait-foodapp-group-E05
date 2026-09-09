@@ -6,11 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ait.app.Service.AddressService;
 import com.ait.app.model.Address;
 import com.ait.app.repository.AddressRepo;
 import com.ait.app.requestbody.AddressDto;
-
+import com.ait.app.service.AddressService;
 @Service
 public class AddressServiceImpl implements AddressService {
 
