@@ -80,4 +80,15 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public void deleteUser(Long id) {
+		Optional<User> u = ur.findById(id);
+		if(u.isEmpty()) {
+			throw new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND);
+		}
+		ur.deleteById(id);
+	}
+	
+	
+
 }
