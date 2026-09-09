@@ -35,7 +35,7 @@ public class UserController {
 	    return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
 	}
 
-	
+	//
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
 
