@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 public class AddressController {
 
 	@Autowired
-	private AddressService addressService;
+	AddressService addressService;
 
 	@PostMapping
 	public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto) {
