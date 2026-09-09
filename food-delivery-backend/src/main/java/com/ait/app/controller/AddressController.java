@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ait.app.Dto.AddressDto;
+
+
 import com.ait.app.service.AddressService;
+import com.ait.app.requestbody.AddressDto;
+
 
 import org.springframework.http.HttpStatus;
 

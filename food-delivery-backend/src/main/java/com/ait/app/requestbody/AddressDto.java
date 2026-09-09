@@ -1,4 +1,4 @@
-package com.ait.app.Dto;
+package com.ait.app.requestbody;
 
 public class AddressDto {
 
@@ -41,8 +41,8 @@ public class AddressDto {
 	public int getPincode() {
 		return pincode;
 	}
-	public void setPincode(int pincode) {
-		this.pincode = pincode;
+	public void setPinCode(int pinCode) {
+		this.pincode = pinCode;
 	}
 	
 	
