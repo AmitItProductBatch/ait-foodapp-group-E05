@@ -1,42 +1,23 @@
 package com.ait.app.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ait.app.service.AddressService;
-import com.ait.app.requestbody.AddressDto;
-
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.ait.app.service.AddressService;
+import com.ait.app.requestbody.AddressRequestDto;
 
 @RestController
-@RequestMapping("/api/addresses")
+@RequestMapping("/users")
 public class AddressController {
-	
-	@Autowired
-	private AddressService addressService;
-	
-	@PostMapping
-	public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto){
-		AddressDto created = addressService.createAddress(addressDto);
-		return new ResponseEntity<>(created, HttpStatus.CREATED);
-	}
-	
-	@GetMapping
-	public ResponseEntity<List<AddressDto>> getAllAddresses() {
-		return ResponseEntity.ok(addressService.getAllAddresses());
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<AddressDto> getAddressById(@PathVariable int id){
-		return ResponseEntity.ok(addressService.getAddressById(id));
-	}
 
+    @Autowired
+    private AddressService as;
+
+    @PostMapping("/{userId}/addresses")
+    public ResponseEntity<Long> createAddress(@PathVariable Long userId,@RequestBody AddressRequestDto dto) {
+        
+        Long addressId = as.CreateAddress(userId, dto);
+        return new ResponseEntity<>(addressId, HttpStatus.CREATED);
+    }
 }

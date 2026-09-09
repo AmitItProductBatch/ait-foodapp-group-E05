@@ -1,83 +1,60 @@
-
 package com.ait.app.serviceimpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.ait.app.service.AddressService;
 import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.Address;
-import com.ait.app.repository.AddressRepo;
-import com.ait.app.requestbody.AddressDto;
+import com.ait.app.model.User;
+import com.ait.app.repository.AddressRepository;
+import com.ait.app.repository.UserRepository;
+import com.ait.app.requestbody.AddressRequestDto;
+import com.ait.app.service.AddressService;
 
 @Service
-public class AddressServiceImpl implements AddressService {
+public class AddressServiceImpl implements AddressService{
 
-    @Autowired
-    private AddressRepo addressRepo;
-
-    @Override
-    public AddressDto createAddress(AddressDto addressDto) {
-
-        Address address = new Address();
-
-        address.setHouseNo(addressDto.getHouseNo());
-        address.setStreetName(addressDto.getStreetName());
-        address.setLandmark(addressDto.getLandmark());
-        address.setCity(addressDto.getCity());
-        address.setPinCode(addressDto.getPincode());
-
-        Address saved = addressRepo.save(address);
-
-        return toDto(saved);
-    }
-
-    @Override
-    public List<AddressDto> getAllAddresses() {
-
-        List<Address> addresses = addressRepo.findAll();
-
-        List<AddressDto> addressDtoList = new ArrayList<AddressDto>();
-
-        for (Address address : addresses) {
-            AddressDto dto = toDto(address);
-            addressDtoList.add(dto);
+	@Autowired
+	UserRepository ur;
+	
+	@Autowired
+	AddressRepository ar;
+	
+	@Override
+	public Long CreateAddress(Long userId, AddressRequestDto dto) {
+		// TODO Auto-generated method stub
+		
+        if (dto.getStreet() == null || dto.getStreet().equals("") ||
+            dto.getCity() == null || dto.getCity().equals("") ||
+            dto.getPincode() == null || dto.getPincode().equals("") ||
+            dto.getAddressLabel() == null || dto.getAddressLabel().equals("")) {
+            throw new UserServiceCustomException("Missing mandatory fields (streetAddress, city, postalCode, addressLabel)", HttpStatus.BAD_REQUEST);
         }
-
-        return addressDtoList;
-    }
-
-    @Override
-    public AddressDto getAddressById(int id) {
-
-        Address address = addressRepo.findById(id).orElse(null);
-        if (address == null) {
-			throw new UserServiceCustomException("Address not found", HttpStatus.NOT_FOUND);
-		}
-
-        return toDto(address);
-    }
-
-    private AddressDto toDto(Address address) {
-
-        if (address == null) {
-            return null;
+        
+        Optional<User> o = ur.findById(userId);
+        
+        if (!o.isPresent()) {
+            throw new UserServiceCustomException("User not found with ID: " + userId, HttpStatus.NOT_FOUND);
         }
+        User u = o.get();
+        
+       
+		
+		Address address = new Address();
+		address.setAddressLabel(dto.getAddressLabel());
+        address.setStreet(dto.getStreet());
+        address.setApartment(dto.getApartment());
+        address.setLandmark(dto.getLandmark());
+        address.setCity(dto.getCity());
+        address.setPincode(dto.getPincode());
+        address.setDeliveryInstructions(dto.getDeliveryInstructions());
+        address.setUser(u);
+        
+        Address savedAddress = ar.save(address);
+		return savedAddress.getId();
+	}
 
-        AddressDto dto = new AddressDto();
-
-        dto.setId(address.getId());
-        dto.setHouseNo(address.getHouseNo());
-        dto.setStreetName(address.getStreetName());
-        dto.setLandmark(address.getLandmark());
-        dto.setCity(address.getCity());
-        dto.setPinCode(address.getPinCode());
-
-        return dto;
-    }
 }
-

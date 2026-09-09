@@ -1,12 +1,11 @@
 package com.ait.app.requestbody;
 
-public class UserDTO {
+public class UserResponseDTO {
 	
 	    private Long id;
 	    private String name;
 	    private String email;
 	    private String phNo;
-	    private String address;
 	    private String role;
 
 	    public Long getId() {
@@ -39,14 +38,6 @@ public class UserDTO {
 
 	    public void setPhNo(String phNo) {
 	        this.phNo = phNo;
-	    }
-
-	    public String getAddress() {
-	        return address;
-	    }
-
-	    public void setAddress(String address) {
-	        this.address = address;
 	    }
 
 	    public String getRole() {

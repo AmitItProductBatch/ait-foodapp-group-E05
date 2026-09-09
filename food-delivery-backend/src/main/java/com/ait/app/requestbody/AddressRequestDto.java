@@ -1,104 +1,66 @@
-package com.ait.app.model;
+package com.ait.app.requestbody;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
-@Entity
-public class Address {
+public class AddressRequestDto {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String addressLabel; 
+	private String addressLabel;
     private String street;
-    private String apartment; 
+    private String apartment;
     private String landmark;
     private String city;
-    private String pincode; 
+    private String pincode;
     private String deliveryInstructions;
+    private Long userId;
     
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+    
 	public String getAddressLabel() {
 		return addressLabel;
 	}
-
 	public void setAddressLabel(String addressLabel) {
 		this.addressLabel = addressLabel;
 	}
-
 	public String getStreet() {
 		return street;
 	}
-
 	public void setStreet(String street) {
 		this.street = street;
 	}
-
 	public String getApartment() {
 		return apartment;
 	}
-
 	public void setApartment(String apartment) {
 		this.apartment = apartment;
 	}
-
 	public String getLandmark() {
 		return landmark;
 	}
-
 	public void setLandmark(String landmark) {
 		this.landmark = landmark;
 	}
-
 	public String getCity() {
 		return city;
 	}
-
 	public void setCity(String city) {
 		this.city = city;
 	}
-
 	public String getPincode() {
 		return pincode;
 	}
-
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public String getDeliveryInstructions() {
 		return deliveryInstructions;
 	}
-
 	public void setDeliveryInstructions(String deliveryInstructions) {
 		this.deliveryInstructions = deliveryInstructions;
 	}
-    
-    
-    
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	
     
     
 

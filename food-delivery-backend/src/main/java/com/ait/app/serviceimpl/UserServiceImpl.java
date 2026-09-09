@@ -7,12 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.UserServiceCustomException;
+import com.ait.app.model.Address;
 import com.ait.app.model.User;
+import com.ait.app.repository.AddressRepository;
 import com.ait.app.repository.UserRepository;
 
-import com.ait.app.requestbody.UserDTO;
 
 import com.ait.app.requestbody.UserRequestDto;
+import com.ait.app.requestbody.UserResponseDTO;
+import com.ait.app.requestbody.UserUpdateDto;
 import com.ait.app.service.UserService;
 
 @Service
@@ -20,9 +23,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository ur;
+	
+	@Autowired
+	AddressRepository ar;
 
 	@Override
-	public UserDTO RegisterUser(UserRequestDto dto) {
+	public void registerUser(UserRequestDto dto) {
 
 		if (ur.existsByEmail(dto.getEmail())) {
 			throw new UserServiceCustomException("Email is already registered", HttpStatus.CONFLICT);
@@ -31,11 +37,7 @@ public class UserServiceImpl implements UserService {
 		if (dto.getName() == null || dto.getName().isEmpty()) {
 			throw new UserServiceCustomException("Name cannot be empty", HttpStatus.BAD_REQUEST);
 		}
-
-		if (dto.getAddress() == null || dto.getAddress().isEmpty()) {
-			throw new UserServiceCustomException("Address cannot be empty", HttpStatus.BAD_REQUEST);
-		}
-
+		
 		if (dto.getPhNo() == null || dto.getPhNo().length() != 10) {
 			throw new UserServiceCustomException("Phone number must be exactly 10 digits", HttpStatus.BAD_REQUEST);
 		}
@@ -46,27 +48,16 @@ public class UserServiceImpl implements UserService {
 		User u = new User();
 		u.setName(dto.getName());
 		u.setEmail(dto.getEmail());
-		u.setAddress(dto.getAddress());
 		u.setPassword(dto.getPassword());
 		u.setPhNo(dto.getPhNo());
 		u.setRole("Customer");
 
 		ur.save(u);
-		User saved = ur.save(u);
-
-		UserDTO response = new UserDTO();
-		response.setId(saved.getId());
-		response.setName(saved.getName());
-		response.setEmail(saved.getEmail());
-		response.setPhNo(saved.getPhNo());
-		response.setAddress(saved.getAddress());
-		response.setRole(saved.getRole());
-		return response;
 
 	}
 
 	@Override
-	public UserDTO getUserById(Long id) {
+	public UserResponseDTO getUserById(Long id) {
 		Optional<User> optionalUser = ur.findById(id);
 
 		if (optionalUser.isEmpty()) {
@@ -75,37 +66,67 @@ public class UserServiceImpl implements UserService {
 
 		User u = optionalUser.get();
 
-		UserDTO dto = new UserDTO();
+		UserResponseDTO dto = new UserResponseDTO();
 
 		dto.setId(u.getId());
 		dto.setName(u.getName());
 		dto.setEmail(u.getEmail());
 		dto.setPhNo(u.getPhNo());
-		dto.setAddress(u.getAddress());
 		dto.setRole(u.getRole());
 
 		return dto;
 
 	}
-
+	
 	@Override
-	public UserDTO updateProfile(Long id, UserDTO dto) {
-		User u = ur.findById(id)
-				.orElseThrow(() -> new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND));
-
-		if (dto.getName() != null) {
-			u.setName(dto.getName());
+	public UserResponseDTO updateUserProfile(Long id, UserUpdateDto updateDto) {
+		if (!ur.existsById(id)) {
+			throw new UserServiceCustomException("User not found with ID: " + id, HttpStatus.NOT_FOUND);
 		}
-		if (dto.getPhNo() != null) {
-			u.setPhNo(dto.getPhNo());
-		}
-		if (dto.getAddress() != null) {
-			u.setAddress(dto.getAddress());
+		
+		User user = ur.findById(id).get();
+		
+		if (updateDto.getName() != null && !updateDto.getName().equals("")) {
+			user.setName(updateDto.getName());
 		}
 
-		ur.save(u);
-		return getUserById(id);
+		if (updateDto.getPhNo() != null && !updateDto.getPhNo().equals("")) {
+			if (updateDto.getPhNo().length() != 10) {
+				throw new UserServiceCustomException("Phone number must be exactly 10 digits", HttpStatus.BAD_REQUEST);
+			}
+			user.setPhNo(updateDto.getPhNo());
+		}
+
+		if (updateDto.getAddress() != null && !updateDto.getAddress().equals("")) {
+			Address address = new Address();
+			address.setAddressLabel("Home");
+			address.setStreet(updateDto.getAddress());
+			address.setCity("Default City");
+			address.setPincode("000000");
+			address.setUser(user); 
+			
+			ar.save(address); 
+		}
+		
+		User updatedUser = ur.save(user);
+		
+		UserResponseDTO responsedto = new UserResponseDTO();
+		responsedto.setId(updatedUser.getId());
+		responsedto.setName(updatedUser.getName());
+		responsedto.setEmail(updatedUser.getEmail());
+		responsedto.setPhNo(updatedUser.getPhNo());
+		responsedto.setRole(updatedUser.getRole());
+		
+		return responsedto;
 	}
+	
+		
+	
+
+				
+
+
+	
 
 	@Override
 	public void deleteUser(Long id) {
@@ -114,5 +135,7 @@ public class UserServiceImpl implements UserService {
 		}
 		ur.deleteById(id);
 	}
+
+	
 
 }

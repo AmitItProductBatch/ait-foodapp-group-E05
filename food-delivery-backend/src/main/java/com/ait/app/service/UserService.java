@@ -1,15 +1,18 @@
 package com.ait.app.service;
 
-import com.ait.app.requestbody.UserDTO;
 import com.ait.app.requestbody.UserRequestDto;
+import com.ait.app.requestbody.UserResponseDTO;
+import com.ait.app.requestbody.UserUpdateDto;
 
 public interface UserService {
 
-	UserDTO RegisterUser(UserRequestDto dto);
+	void registerUser(UserRequestDto dto);
 
-	UserDTO getUserById(Long id);
+	UserResponseDTO getUserById(Long id);
 
-	UserDTO updateProfile(Long id, UserDTO dto);
+	UserResponseDTO updateUserProfile(Long id, UserUpdateDto updateDto);
 
 	void deleteUser(Long id);
+
+
 }

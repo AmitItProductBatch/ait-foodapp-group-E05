@@ -1,5 +1,6 @@
 package com.ait.app.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ait.app.requestbody.UserDTO;
 import com.ait.app.requestbody.UserRequestDto;
+import com.ait.app.requestbody.UserResponseDTO;
+import com.ait.app.requestbody.UserUpdateDto;
 import com.ait.app.service.UserService;
 
 import com.ait.app.requestbody.UserRequestDto;
@@ -29,23 +31,24 @@ public class UserController {
 	UserService us;
 
 	@PostMapping("/register")
-	public ResponseEntity<UserDTO> registerUser(@RequestBody UserRequestDto dto) {
-		UserDTO created = us.RegisterUser(dto);
-		return new ResponseEntity<>(created, HttpStatus.CREATED);
+	public ResponseEntity registerUser(@RequestBody UserRequestDto dto) {
+		 us.registerUser(dto);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+	public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 
-		UserDTO dto = us.getUserById(id);
+		UserResponseDTO dto = us.getUserById(id);
 
 		return ResponseEntity.ok(dto);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id, @RequestBody UserDTO dto) {
-		return ResponseEntity.ok(us.updateProfile(id, dto));
+    public ResponseEntity updateProfile(@PathVariable Long id, @RequestBody UserUpdateDto updateDto) {
+        UserResponseDTO updatedProfile = us.updateUserProfile(id, updateDto);
+        return new ResponseEntity<>(updatedProfile , HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
