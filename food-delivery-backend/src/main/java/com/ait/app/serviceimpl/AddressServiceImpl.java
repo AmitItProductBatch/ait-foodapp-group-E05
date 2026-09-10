@@ -12,72 +12,74 @@ import com.ait.app.service.AddressService;
 import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.Address;
 import com.ait.app.repository.AddressRepo;
+import com.ait.app.repository.UserRepository;
 import com.ait.app.requestbody.AddressDto;
 
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    @Autowired
-    private AddressRepo addressRepo;
+	@Autowired
+	AddressRepo addressRepo;
 
-    @Override
-    public AddressDto createAddress(AddressDto addressDto) {
+	@Autowired
+	UserRepository userRepository;
 
-        Address address = new Address();
+	@Override
+	public AddressDto createAddress(AddressDto addressDto) {
 
-        address.setHouseNo(addressDto.getHouseNo());
-        address.setStreetName(addressDto.getStreetName());
-        address.setLandmark(addressDto.getLandmark());
-        address.setCity(addressDto.getCity());
-        address.setPinCode(addressDto.getPincode());
+		Address address = new Address();
+		address.setHouseNo(addressDto.getHouseNo());
+		address.setStreetName(addressDto.getStreetName());
+		address.setLandmark(addressDto.getLandmark());
+		address.setCity(addressDto.getCity());
+		address.setPinCode(addressDto.getPincode());
 
-        Address saved = addressRepo.save(address);
+		Address saved = addressRepo.save(address);
 
-        return toDto(saved);
-    }
+		return toDto(saved);
+	}
 
-    @Override
-    public List<AddressDto> getAllAddresses() {
+	@Override
+	public List<AddressDto> getAllAddresses() {
 
-        List<Address> addresses = addressRepo.findAll();
+		List<Address> addresses = addressRepo.findAll();
 
-        List<AddressDto> addressDtoList = new ArrayList<AddressDto>();
+		List<AddressDto> addressDtoList = new ArrayList<AddressDto>();
 
-        for (Address address : addresses) {
-            AddressDto dto = toDto(address);
-            addressDtoList.add(dto);
-        }
+		for (Address address : addresses) {
+			AddressDto dto = toDto(address);
+			addressDtoList.add(dto);
+		}
 
-        return addressDtoList;
-    }
+		return addressDtoList;
+	}
 
-    @Override
-    public AddressDto getAddressById(int id) {
+	@Override
+	public AddressDto getAddressById(int id) {
 
-        Address address = addressRepo.findById(id).orElse(null);
-        if (address == null) {
+		Address address = addressRepo.findById(id).orElse(null);
+		if (address == null) {
 			throw new UserServiceCustomException("Address not found", HttpStatus.NOT_FOUND);
 		}
 
-        return toDto(address);
-    }
+		return toDto(address);
+	}
 
-    private AddressDto toDto(Address address) {
+	private AddressDto toDto(Address address) {
 
-        if (address == null) {
-            return null;
-        }
+		if (address == null) {
+			return null;
+		}
 
-        AddressDto dto = new AddressDto();
+		AddressDto dto = new AddressDto();
 
-        dto.setId(address.getId());
-        dto.setHouseNo(address.getHouseNo());
-        dto.setStreetName(address.getStreetName());
-        dto.setLandmark(address.getLandmark());
-        dto.setCity(address.getCity());
-        dto.setPinCode(address.getPinCode());
+		dto.setId(address.getId());
+		dto.setHouseNo(address.getHouseNo());
+		dto.setStreetName(address.getStreetName());
+		dto.setLandmark(address.getLandmark());
+		dto.setCity(address.getCity());
+		dto.setPinCode(address.getPinCode());
 
-        return dto;
-    }
+		return dto;
+	}
 }
-
