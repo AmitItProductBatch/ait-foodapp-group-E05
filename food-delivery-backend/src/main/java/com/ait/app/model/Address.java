@@ -22,10 +22,13 @@ public class Address {
 	private String city;
 	private int pinCode;
 
+
 	@ManyToOne
 	@JoinColumn(name = "userId", referencedColumnName = "id")
 	private User user;
 
+
+	
 	public int getId() {
 		return id;
 	}

@@ -7,7 +7,7 @@ public class UserRequestDto {
     private String password;
     private String phNo;
     private String address;
-    private String role;
+    private Long roleId;
 
 	public String getName() {
 		return name;
@@ -49,14 +49,15 @@ public class UserRequestDto {
 		this.address = address;
 	}
 
-	public String getRole() {
-		return role;
+	public Long getRoleId() {
+		return roleId;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
- 
+
+	
 	
 
 
