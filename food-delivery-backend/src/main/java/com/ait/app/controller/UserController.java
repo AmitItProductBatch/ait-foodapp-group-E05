@@ -17,12 +17,8 @@ import com.ait.app.requestbody.UserDTO;
 import com.ait.app.requestbody.UserRequestDto;
 import com.ait.app.service.UserService;
 
-import com.ait.app.requestbody.UserRequestDto;
-import com.ait.app.service.UserService;
-
 @RestController
 @RequestMapping({ "/users" })
-
 public class UserController {
 
 	@Autowired
@@ -44,14 +40,13 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id, @RequestBody UserDTO dto) {
+	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id,
+			@RequestBody UserDTO dto) {
 		return ResponseEntity.ok(us.updateProfile(id, dto));
 	}
-
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-		us.deleteUser(id);
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<String> deleteUser( @PathVariable Long id) { us.deleteUser(id);
+	return new ResponseEntity<>( "User deleted successfully", HttpStatus.OK );
 	}
 
 }
