@@ -1,5 +1,6 @@
 package com.ait.app.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,9 +78,11 @@ public class RoleServiceImpl implements RoleService{
 		
 		List<Role> userRoles = exUser.getRoles();
 		if(userRoles==null) {
-			userRoles.add(userRole);
+			userRoles = new ArrayList<>();
+			
 		}
 		
+		userRoles.add(userRole);
 		exUser.setRoles(userRoles);
 		
 		ur.save(exUser);
