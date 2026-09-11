@@ -1,4 +1,6 @@
-package com.ait.app.model;
+package com.ait.app.controller;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,16 @@ public class UserController {
 
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<UserDTO>> getUserName(@PathVariable String name) {
+
+	    List<UserDTO> dto = us.getUserByName(name);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	
 
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id,
