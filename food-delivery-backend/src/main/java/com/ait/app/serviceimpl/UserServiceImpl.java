@@ -34,11 +34,6 @@ public class UserServiceImpl implements UserService {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		if (dto.getAddress() == null || dto.getAddress().isEmpty()) {
-			throw new UserServiceCustomException("Address cannot be empty", 
-					HttpStatus.BAD_REQUEST);
-		}
-
 		if (dto.getPhNo() == null || dto.getPhNo().length() != 10) {
 			throw new UserServiceCustomException("Phone number must be exactly 10 digits",
 					HttpStatus.BAD_REQUEST);
@@ -51,7 +46,6 @@ public class UserServiceImpl implements UserService {
 		User u = new User();
 		u.setName(dto.getName());
 		u.setEmail(dto.getEmail());
-		u.setAddress(dto.getAddress());
 		u.setPassword(dto.getPassword());
 		u.setPhNo(dto.getPhNo());
 		u.setRole("Customer");
@@ -64,7 +58,6 @@ public class UserServiceImpl implements UserService {
 		response.setName(saved.getName());
 		response.setEmail(saved.getEmail());
 		response.setPhNo(saved.getPhNo());
-		response.setAddress(saved.getAddress());
 		response.setRole(saved.getRole());
 		return response;
 
@@ -86,7 +79,6 @@ public class UserServiceImpl implements UserService {
 		dto.setName(u.getName());
 		dto.setEmail(u.getEmail());
 		dto.setPhNo(u.getPhNo());
-		dto.setAddress(u.getAddress());
 		dto.setRole(u.getRole());
 
 		return dto;
@@ -95,23 +87,29 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO updateProfile(Long id, UserDTO dto) {
-		User u = ur.findById(id)
-				.orElseThrow(() -> new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND));
 
-		if (dto.getName() != null) {
-			u.setName(dto.getName());
-		}
-		if (dto.getPhNo() != null) {
-			u.setPhNo(dto.getPhNo());
-		}
-		if (dto.getAddress() != null) {
-			u.setAddress(dto.getAddress());
-		}
+	    if (ur.existsById(id)) {
 
-		ur.save(u);
-		return getUserById(id);
+	        User u = ur.findById(id).get();
+
+	        if (dto.getName() != null) {
+	            u.setName(dto.getName());
+	        }
+
+	        if (dto.getPhNo() != null) {
+	            u.setPhNo(dto.getPhNo());
+	        }
+
+	        ur.save(u);
+
+	        return getUserById(id);
+
+	    } else {
+
+	        throw new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND);
+	    }
 	}
-
+	
 	@Override
 	public void deleteUser(Long id) {
 		if (!ur.existsById(id)) {
