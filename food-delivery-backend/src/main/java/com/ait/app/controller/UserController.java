@@ -1,4 +1,4 @@
-package com.ait.app.model;
+package com.ait.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

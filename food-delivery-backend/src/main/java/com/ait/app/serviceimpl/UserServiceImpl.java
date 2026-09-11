@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
 		rl.add(r);
 		u.setRoles(rl);
 
-		ur.save(u);
 		User saved = ur.save(u);
 
 		UserDTO response = new UserDTO();
