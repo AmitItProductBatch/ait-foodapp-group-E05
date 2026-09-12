@@ -61,11 +61,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurant.setCuisine(dto.getCuisine());
 		restaurant.setContact(dto.getContact());
 		restaurant.setHours(dto.getHours());
-		restaurant.setRating(dto.getRating());
-
 		restaurant.setOwner(owner);
 
 		Restaurant savedRestaurant = rr.save(restaurant);
+	
 
 		RestaurantResponseDto responseDto = new RestaurantResponseDto();
 		responseDto.setRestaurantId(savedRestaurant.getId());
@@ -93,7 +92,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 		dto.setAddress(restaurant.getAddress());
 		dto.setHours(restaurant.getHours());
 		dto.setCuisine(restaurant.getCuisine());
-		dto.setRating(restaurant.getRating());
 
 		return dto;
 	}

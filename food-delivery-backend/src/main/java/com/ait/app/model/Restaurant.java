@@ -22,7 +22,6 @@ public class Restaurant {
     
     private String hours;
 
-    private Double rating;
 
     private boolean active = true; 
     
@@ -34,13 +33,6 @@ public class Restaurant {
 		this.hours = hours;
 	}
 
-	public Double getRating() {
-		return rating;
-	}
-
-	public void setRating(Double rating) {
-		this.rating = rating;
-	}
 
 	public boolean isActive() {
 		return active;
