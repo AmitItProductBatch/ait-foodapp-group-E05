@@ -7,6 +7,23 @@ public class RestaurantRequestDto {
     private String cuisine;
     private String contact;
     private Long ownerId;
+    private String hours;
+    private Double rating;
+
+    
+	public String getHours() {
+		return hours;
+	}
+	public void setHours(String hours) {
+		this.hours = hours;
+	}
+	public Double getRating() {
+		return rating;
+	}
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+	
 	public String getName() {
 		return name;
 	}

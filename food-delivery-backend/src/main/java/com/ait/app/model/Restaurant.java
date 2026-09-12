@@ -20,7 +20,37 @@ public class Restaurant {
     private String cuisine;
     private String contact;
     
-    @ManyToOne
+    private String hours;
+
+    private Double rating;
+
+    private boolean active = true; 
+    
+    public String getHours() {
+		return hours;
+	}
+
+	public void setHours(String hours) {
+		this.hours = hours;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	@ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
 

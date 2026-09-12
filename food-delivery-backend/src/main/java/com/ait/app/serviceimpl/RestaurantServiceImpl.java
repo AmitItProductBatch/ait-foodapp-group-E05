@@ -1,5 +1,7 @@
 package com.ait.app.serviceimpl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import com.ait.app.model.Restaurant;
 import com.ait.app.model.User;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.repository.UserRepository;
+import com.ait.app.requestbody.RestaurantDetailsDto;
 import com.ait.app.requestbody.RestaurantRequestDto;
 import com.ait.app.requestbody.RestaurantResponseDto;
 import com.ait.app.service.RestaurantService;
@@ -57,6 +60,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurant.setAddress(dto.getAddress());
 		restaurant.setCuisine(dto.getCuisine());
 		restaurant.setContact(dto.getContact());
+		restaurant.setHours(dto.getHours());
+		restaurant.setRating(dto.getRating());
+
 		restaurant.setOwner(owner);
 
 		Restaurant savedRestaurant = rr.save(restaurant);
@@ -67,6 +73,29 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 		return responseDto;
 
+	}
+
+	@Override
+	public RestaurantDetailsDto getRestaurantById(int id) {
+
+		Optional<Restaurant> restaurants = rr.findByIdAndActiveTrue(id);
+
+		if (restaurants.isEmpty()) {
+			throw new RestaurantCustomException("Restaurant not found or inactive", HttpStatus.NOT_FOUND);
+		}
+
+		Restaurant restaurant = restaurants.get();
+
+		RestaurantDetailsDto dto = new RestaurantDetailsDto();
+
+		dto.setId(restaurant.getId());
+		dto.setName(restaurant.getName());
+		dto.setAddress(restaurant.getAddress());
+		dto.setHours(restaurant.getHours());
+		dto.setCuisine(restaurant.getCuisine());
+		dto.setRating(restaurant.getRating());
+
+		return dto;
 	}
 
 }
