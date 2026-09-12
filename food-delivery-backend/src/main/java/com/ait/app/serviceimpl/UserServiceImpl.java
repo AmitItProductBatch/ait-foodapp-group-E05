@@ -1,5 +1,7 @@
 package com.ait.app.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.UserServiceCustomException;
+import com.ait.app.model.Role;
 import com.ait.app.model.User;
+import com.ait.app.repository.RoleRepo;
 import com.ait.app.repository.UserRepository;
 
 import com.ait.app.requestbody.UserDTO;
@@ -20,9 +24,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository ur;
+	
+	@Autowired
+	RoleRepo rr;
 
 	@Override
-	public UserDTO RegisterUser(UserRequestDto dto) {
+	public UserDTO registerUser(UserRequestDto dto) {
 
 		if (ur.existsByEmail(dto.getEmail())) {
 			throw new UserServiceCustomException("Email is already registered", 
@@ -48,9 +55,19 @@ public class UserServiceImpl implements UserService {
 		u.setEmail(dto.getEmail());
 		u.setPassword(dto.getPassword());
 		u.setPhNo(dto.getPhNo());
-		u.setRole("Customer");
+		
+		Optional<Role> o = rr.findById(dto.getRoleId());
+		
+		if(!o.isPresent()) {
+			
+			throw new UserServiceCustomException("Role Not Found", HttpStatus.NOT_FOUND);	
+		}
+		Role r =o.get();
+		
+		List<Role> rl = new ArrayList<>();
+		rl.add(r);
+		u.setRoles(rl);
 
-		ur.save(u);
 		User saved = ur.save(u);
 
 		UserDTO response = new UserDTO();
@@ -58,7 +75,7 @@ public class UserServiceImpl implements UserService {
 		response.setName(saved.getName());
 		response.setEmail(saved.getEmail());
 		response.setPhNo(saved.getPhNo());
-		response.setRole(saved.getRole());
+
 		return response;
 
 	}
@@ -79,8 +96,6 @@ public class UserServiceImpl implements UserService {
 		dto.setName(u.getName());
 		dto.setEmail(u.getEmail());
 		dto.setPhNo(u.getPhNo());
-		dto.setRole(u.getRole());
-
 		return dto;
 
 	}

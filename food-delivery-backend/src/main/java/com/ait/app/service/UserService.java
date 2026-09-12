@@ -5,7 +5,7 @@ import com.ait.app.requestbody.UserRequestDto;
 
 public interface UserService {
 
-	UserDTO RegisterUser(UserRequestDto dto);
+	UserDTO registerUser(UserRequestDto dto);
 
 	UserDTO getUserById(Long id);
 
