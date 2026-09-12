@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
 		rl.add(r);
 		u.setRoles(rl);
 
-		ur.save(u);
 		User saved = ur.save(u);
 
 		UserDTO response = new UserDTO();
@@ -76,6 +75,7 @@ public class UserServiceImpl implements UserService {
 		response.setName(saved.getName());
 		response.setEmail(saved.getEmail());
 		response.setPhNo(saved.getPhNo());
+
 		return response;
 
 	}
@@ -96,28 +96,35 @@ public class UserServiceImpl implements UserService {
 		dto.setName(u.getName());
 		dto.setEmail(u.getEmail());
 		dto.setPhNo(u.getPhNo());
-
 		return dto;
 
 	}
 
 	@Override
 	public UserDTO updateProfile(Long id, UserDTO dto) {
-		User u = ur.findById(id)
-				.orElseThrow(() -> new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND));
 
-		if (dto.getName() != null) {
-			u.setName(dto.getName());
-		}
-		if (dto.getPhNo() != null) {
-			u.setPhNo(dto.getPhNo());
-		}
-		
+	    if (ur.existsById(id)) {
 
-		ur.save(u);
-		return getUserById(id);
+	        User u = ur.findById(id).get();
+
+	        if (dto.getName() != null) {
+	            u.setName(dto.getName());
+	        }
+
+	        if (dto.getPhNo() != null) {
+	            u.setPhNo(dto.getPhNo());
+	        }
+
+	        ur.save(u);
+
+	        return getUserById(id);
+
+	    } else {
+
+	        throw new UserServiceCustomException("User not found", HttpStatus.NOT_FOUND);
+	    }
 	}
-
+	
 	@Override
 	public void deleteUser(Long id) {
 		if (!ur.existsById(id)) {

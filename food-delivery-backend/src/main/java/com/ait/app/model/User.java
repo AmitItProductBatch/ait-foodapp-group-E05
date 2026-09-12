@@ -1,6 +1,5 @@
 package com.ait.app.model;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,8 +18,6 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-		
 	private String name;
 	private String email;
 	private String password;
@@ -30,8 +27,6 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses;
 
-	
-	
 	@ManyToMany
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name="role_id"))
 	private List<Role> roles;
@@ -61,7 +56,7 @@ public class User {
 	public void setPhNo(String phNo) {
 		this.phNo = phNo;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}

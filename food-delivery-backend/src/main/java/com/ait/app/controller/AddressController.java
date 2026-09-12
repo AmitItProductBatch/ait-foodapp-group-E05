@@ -35,12 +35,18 @@ public class AddressController {
 	
 	@GetMapping
 	public ResponseEntity<List<AddressDto>> getAllAddresses() {
-		return ResponseEntity.ok(addressService.getAllAddresses());
+
+	    List<AddressDto> addresses = addressService.getAllAddresses();
+
+	    return ResponseEntity.ok(addresses);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<AddressDto> getAddressById(@PathVariable int id){
-		return ResponseEntity.ok(addressService.getAddressById(id));
+	public ResponseEntity<AddressDto> getAddressById(@PathVariable int id) {
+
+	    AddressDto address = addressService.getAddressById(id);
+
+	    return ResponseEntity.ok(address);
 	}
 
 }
