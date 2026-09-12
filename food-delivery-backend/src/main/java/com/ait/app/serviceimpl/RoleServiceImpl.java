@@ -124,7 +124,7 @@ public class RoleServiceImpl implements RoleService{
 	public Role roleUpdate(Long id, Role r) {
 	        Role exRole = rr.findById(id).get();
 	        if (r.getName() != null) { 
-	            exRole.setName(r.getName().toUpperCase()); 
+	            exRole.setName(r.getName()); 
 	        }
 	        return rr.save(exRole);
 	    }
