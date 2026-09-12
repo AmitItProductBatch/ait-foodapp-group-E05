@@ -44,6 +44,7 @@ public class UserController {
 			@RequestBody UserDTO dto) {
 		return ResponseEntity.ok(us.updateProfile(id, dto));
 	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUser( @PathVariable Long id) { us.deleteUser(id);
 	return new ResponseEntity<>( "User deleted successfully", HttpStatus.OK );

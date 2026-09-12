@@ -1,7 +1,6 @@
 package com.ait.app.model;
 
 import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +19,6 @@ public class User {
 	private String email;
 	private String password;
 	private String phNo;
-	private String address;
 	private String role;
 
 	@OneToMany(mappedBy = "user")
@@ -56,14 +54,6 @@ public class User {
 
 	public void setPhNo(String phNo) {
 		this.phNo = phNo;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getRole() {

@@ -6,7 +6,6 @@ public class UserRequestDto {
     private String email;
     private String password;
     private String phNo;
-    private String address;
     private String role;
 
 	public String getName() {
@@ -39,14 +38,6 @@ public class UserRequestDto {
 
 	public void setPhNo(String phNo) {
 		this.phNo = phNo;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getRole() {
