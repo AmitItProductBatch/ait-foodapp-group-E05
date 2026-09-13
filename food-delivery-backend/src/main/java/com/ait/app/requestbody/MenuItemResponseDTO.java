@@ -8,7 +8,7 @@ public class MenuItemResponseDTO {
 	    private Double price;
 	    private Boolean availability;
 	    private String category;
-	    private Long restaurantId;
+	    private int restaurantId;
 		public int getId() {
 			return id;
 		}
@@ -45,10 +45,10 @@ public class MenuItemResponseDTO {
 		public void setCategory(String category) {
 			this.category = category;
 		}
-		public Long getRestaurantId() {
+		public int getRestaurantId() {
 			return restaurantId;
 		}
-		public void setRestaurantId(Long restaurantId) {
+		public void setRestaurantId(int  restaurantId) {
 			this.restaurantId = restaurantId;
 		}
 

@@ -1,10 +1,15 @@
 package com.ait.app.repository;
 
-import java.awt.MenuItem;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MenuItemRepository extends JpaRepository<MenuItem,Long> {
+import com.ait.app.model.MenuItem;
+
+public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
 
 	Boolean existByRestaurantIdAndName(Integer restaurantID,String name);
+
+	
+	
 }

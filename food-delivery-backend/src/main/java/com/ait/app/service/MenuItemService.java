@@ -5,5 +5,5 @@ import com.ait.app.requestbody.MenuItemResponseDTO;
 
 public interface MenuItemService {
 
-	MenuItemResponseDTO addMenuItem(Long restaurantId,MenuItemRequestDTO request);
+	MenuItemResponseDTO addMenuItem(int  restaurantId,MenuItemRequestDTO request);
 }
