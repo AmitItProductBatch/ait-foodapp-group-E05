@@ -1,5 +1,7 @@
 package com.ait.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,16 @@ public class RestaurantController {
 	public ResponseEntity<RestaurantDetailsDto> getRestaurantById(@PathVariable int id) {
 
 	    RestaurantDetailsDto dto = restaurantService.getRestaurantById(id);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/cuisine/{cuisine}")
+	public ResponseEntity<List<RestaurantDetailsDto>> getRestaurantsByCuisine(
+	        @PathVariable String cuisine) {
+
+	    List<RestaurantDetailsDto> dto =
+	            restaurantService.getRestaurantsByCuisine(cuisine);
 
 	    return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
