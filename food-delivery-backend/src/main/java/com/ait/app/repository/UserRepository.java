@@ -2,16 +2,17 @@ package com.ait.app.repository;
 
 import com.ait.app.model.User;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.stereotype.Repository;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
     
 
 	boolean existsByEmail(String email); 
-
+	List<User> findByName(String name);
 }
 
 

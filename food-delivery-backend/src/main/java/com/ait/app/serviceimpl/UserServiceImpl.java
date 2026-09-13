@@ -133,4 +133,31 @@ public class UserServiceImpl implements UserService {
 		ur.deleteById(id);
 	}
 
+	@Override
+	public List<UserDTO> getUserByName(String name) {
+
+	    List<User> users = ur.findByName(name);
+
+	    if (users == null || users.isEmpty()) {
+	        throw new UserServiceCustomException(
+	            "User not found",
+	            HttpStatus.NOT_FOUND);
+	    }
+
+	    List<UserDTO> dtoList = new ArrayList<>();
+
+	    for (User user : users) {
+
+	        UserDTO dto = new UserDTO();
+
+	        dto.setId(user.getId());
+	        dto.setName(user.getName());
+	        dto.setEmail(user.getEmail());
+	        dto.setPhNo(user.getPhNo());
+
+	        dtoList.add(dto);
+	    }
+
+	    return dtoList;
+	}
 }

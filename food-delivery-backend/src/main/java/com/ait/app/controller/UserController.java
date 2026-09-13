@@ -38,13 +38,22 @@ public class UserController {
 
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<UserDTO>> getUserName(@PathVariable String name) {
+
+	    List<UserDTO> dto = us.getUserByName(name);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	
 
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id,
 			@RequestBody UserDTO dto) {
 		return ResponseEntity.ok(us.updateProfile(id, dto));
 	}
-	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUser( @PathVariable Long id) { us.deleteUser(id);
 	return new ResponseEntity<>( "User deleted successfully", HttpStatus.OK );
