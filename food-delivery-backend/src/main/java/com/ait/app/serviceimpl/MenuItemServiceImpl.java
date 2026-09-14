@@ -2,6 +2,7 @@ package com.ait.app.serviceimpl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.MenuItemAlreadyExsistsException;
 import com.ait.app.model.MenuItem;
@@ -11,7 +12,7 @@ import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.requestbody.MenuItemRequestDTO;
 import com.ait.app.requestbody.MenuItemResponseDTO;
 import com.ait.app.service.MenuItemService;
-
+@Service
 public class MenuItemServiceImpl implements MenuItemService  {
 	
 	@Autowired
