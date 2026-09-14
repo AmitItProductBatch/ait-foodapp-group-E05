@@ -26,7 +26,7 @@ public class MenuItemServiceImpl implements MenuItemService  {
 		Restaurant restaurant=restaurantRepository.findById(restaurantId).get();
 		
 		
-		if(menuItemRepository.existByRestaurantIdAndName(restaurantId, request.getName())) {
+		if(menuItemRepository.existsByRestaurantIdAndName(restaurantId, request.getName())) {
 			throw new MenuItemAlreadyExsistsException("Menu item already exists for this restaurants");
 		}
 		
