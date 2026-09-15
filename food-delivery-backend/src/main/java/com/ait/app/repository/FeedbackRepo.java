@@ -6,7 +6,7 @@ import com.ait.app.model.Feedback;
 
 public interface FeedbackRepo extends JpaRepository<Feedback, Integer> {
 	
-	boolean existsByUserIdAndOrderId(Long userId, int orderId);
+	boolean existsByUser_IdAndOrderId(Long userId, int orderId);
 	
 	
 
