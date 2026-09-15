@@ -1,4 +1,5 @@
 package com.ait.app.model;
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,6 +27,9 @@ public class User {
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Feedback> feedbacks = new ArrayList<>();
 
 	@ManyToMany
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name="role_id"))
@@ -75,6 +79,12 @@ public class User {
 	}
 	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
+	}
+	public List<Feedback> getFeedbacks() {
+		return feedbacks;
+	}
+	public void setFeedbacks(List<Feedback> feedbacks) {
+		this.feedbacks = feedbacks;
 	}
 	
 	

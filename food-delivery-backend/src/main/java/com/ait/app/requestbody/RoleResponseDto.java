@@ -19,7 +19,4 @@ public class RoleResponseDto {
 		 this.description = description;
 	 }
 	 
-	 
-	 
-
 }

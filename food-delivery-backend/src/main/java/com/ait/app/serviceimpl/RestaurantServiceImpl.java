@@ -1,5 +1,7 @@
 package com.ait.app.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +96,34 @@ public class RestaurantServiceImpl implements RestaurantService {
 		dto.setCuisine(restaurant.getCuisine());
 
 		return dto;
+	}
+
+	@Override
+	public List<RestaurantDetailsDto> getRestaurantsByCuisine(String cuisine) {
+		 List<Restaurant> restaurants = rr.findByCuisineIgnoreCaseAndActiveTrue(cuisine);
+
+		    if (restaurants.isEmpty()) {
+		        throw new RestaurantCustomException(
+		                "No active restaurants found for cuisine: " + cuisine,
+		                HttpStatus.NOT_FOUND);
+		    }
+
+		    List<RestaurantDetailsDto> result = new ArrayList<>();
+
+		    for (Restaurant restaurant : restaurants) {
+
+		        RestaurantDetailsDto dto = new RestaurantDetailsDto();
+
+		        dto.setId(restaurant.getId());
+		        dto.setName(restaurant.getName());
+		        dto.setAddress(restaurant.getAddress());
+		        dto.setHours(restaurant.getHours());
+		        dto.setCuisine(restaurant.getCuisine());
+
+		        result.add(dto);
+		    }
+
+		    return result;
 	}
 
 }
