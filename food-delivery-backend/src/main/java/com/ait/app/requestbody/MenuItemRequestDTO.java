@@ -7,6 +7,13 @@ public class MenuItemRequestDTO {
 	    private Double price;
 	    private Boolean availability;
 	    private String category;
+	    private int restaurantId;
+		public int getRestaurantId() {
+			return restaurantId;
+		}
+		public void setRestaurantId(int restaurantId) {
+			this.restaurantId = restaurantId;
+		}
 		public String getName() {
 			return name;
 		}

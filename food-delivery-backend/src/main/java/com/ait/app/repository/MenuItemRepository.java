@@ -8,7 +8,7 @@ import com.ait.app.model.MenuItem;
 
 public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
 
-	Boolean existByRestaurantIdAndName(Integer restaurantID,String name);
+	Boolean existsByRestaurantIdAndName(Integer restaurantID,String name);
 
 	
 	
