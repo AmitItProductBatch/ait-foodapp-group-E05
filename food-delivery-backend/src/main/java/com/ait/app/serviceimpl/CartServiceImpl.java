@@ -59,64 +59,6 @@ public class CartServiceImpl implements CartService{
 		return cdto;
 	}
 
-	@Override
-	public CartResponseDto getCartByUserId(Long userId) {
-		Optional<Cart> o = cr.findById(userId);
-		if(!o.isPresent()) {
-			
-			throw new UserServiceCustomException("Cart not found for this user", HttpStatus.NOT_FOUND);
-		}
-	 
-		Cart c = o.get();
-		CartResponseDto dto = new CartResponseDto();
-		dto.setId(c.getId());
-		dto.setUserId(c.getUserId());
-		dto.setRestaurantId(dto.getRestaurantId());
-		dto.setTotalAmount(c.getTotalAmount());
-		dto.setCreatedAt(c.getCreatedAt());
-		dto.setUpdatedAt(dto.getUpdatedAt());
-		return dto;
-	}
-
-	@Override
-	public CartResponseDto updateCart(Long userId, CartRequestDto dto) {
-		// TODO Auto-generated method stub
-		Optional<Cart> o = cr.findById(userId);
-        if (!o.isPresent()) {
-            throw new UserServiceCustomException("Cart not found for this user", HttpStatus.NOT_FOUND);
-        }
-        Cart c = o.get();
-        
-        if(c.getUserId()!=null) {
-        	c.setUserId(dto.getUserId());
-        }
-        if(c.getRestaurantId()!=null) {
-        	c.setRestaurantId(dto.getRestaurantId());
-        }
-        
-        Cart updated = cr.save(c);
-        
-        CartResponseDto rDto = new CartResponseDto();
-        rDto.setId(updated.getId());
-        rDto.setUserId(updated.getRestaurantId());
-        rDto.setTotalAmount(updated.getTotalAmount());
-        rDto.setCreatedAt(updated.getCreatedAt());
-        rDto.setUpdatedAt(updated.getUpdatedAt());
-		
-		return rDto;
-	}
-
-	@Override
-	public String deleteCart(Long userId) {
-		// TODO Auto-generated method stub
-		Optional<Cart> o = cr.findById(userId);
-        if (!o.isPresent()) {
-            throw new UserServiceCustomException("Cart not found for this user", HttpStatus.NOT_FOUND);
-        }
-        cr.delete(o.get());
-        return "Cart cleared successfully";
-	
-	}
 	
 
 }

@@ -31,22 +31,5 @@ public class CartController {
 		return new ResponseEntity<>(r, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/{userId}")
-    public ResponseEntity<CartResponseDto> getCartByUserId(@PathVariable Long userId) {
-        CartResponseDto r = cs.getCartByUserId(userId);
-        return new ResponseEntity<>(r, HttpStatus.OK);
-    }
 	
-	@PutMapping("/{userId}")
-    public ResponseEntity<CartResponseDto> updateCart(@PathVariable Long userId, @RequestBody CartRequestDto dto) {
-        CartResponseDto r = cs.updateCart(userId, dto);
-        return new ResponseEntity(r, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteCart(@PathVariable Long userId) {
-    	
-        return new ResponseEntity<>(cs.deleteCart(userId), HttpStatus.OK);
-    }
-
 }
