@@ -54,11 +54,31 @@ public class MenuItemServiceImpl implements MenuItemService  {
 		
 		
 	}
+	@Override
+	public MenuItem updateMenuItem(int id, MenuItem menuItem) {
+
+	    MenuItem existingItem = menuItemRepository.findById(id).orElse(null);
+
+	    if (existingItem == null) {
+	        return null;
+	    }
+
+	    existingItem.setName(menuItem.getName());
+	    existingItem.setDescription(menuItem.getDescription());
+	    existingItem.setPrice(menuItem.getPrice());
+	    existingItem.setAvailability(menuItem.getAvailability());
+	    existingItem.setCategory(menuItem.getCategory());
+
+	    return menuItemRepository.save(existingItem);
+	}
+	
+
+	}
 	
 	
 
 	
-	}
+	
 	
 
 	
