@@ -1,12 +1,15 @@
 package com.ait.app.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ait.app.model.MenuItem;
 
+public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
 
-public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
+	boolean existsByRestaurantIdAndName(int restaurantId, String name);
 
-	Boolean existsByRestaurantIdAndName(Integer restaurantID, String name);
+	List<MenuItem> findByRestaurantIdAndAvailabilityTrue(int restaurantId);
 
 }
