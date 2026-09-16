@@ -1,10 +1,14 @@
 package com.ait.app.serviceimpl;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.MenuItemAlreadyExsistsException;
+import com.ait.app.exception.MenuItemNotFoundException;
+import com.ait.app.exception.MenuItemOwnershipException;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
 import com.ait.app.repository.MenuItemRepository;
@@ -55,6 +59,30 @@ public class MenuItemServiceImpl implements MenuItemService  {
 		
 	}
 	
+	@Override
+	public void deleteMenuItem(int itemId, Long ownerId) {
+
+	    Optional<MenuItem> optionalMenuItem = menuItemRepository.findById(itemId);
+
+	    if (optionalMenuItem.isEmpty()) {
+	        throw new MenuItemNotFoundException("Menu item not found");
+	    }
+
+	    MenuItem menuItem = optionalMenuItem.get();
+
+	    Restaurant restaurant = menuItem.getRestaurant();
+
+	    if (restaurant.getOwner() == null) {
+	        throw new MenuItemOwnershipException("Restaurant has no owner");
+	    }
+
+	    if (!restaurant.getOwner().getId().equals(ownerId)) {
+	        throw new MenuItemOwnershipException(
+	                "You are not the owner of this restaurant");
+	    }
+
+	    menuItemRepository.delete(menuItem);
+	}
 	
 
 	

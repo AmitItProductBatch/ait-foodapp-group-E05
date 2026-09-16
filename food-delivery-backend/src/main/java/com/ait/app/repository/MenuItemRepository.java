@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ait.app.model.MenuItem;
 
+
 public interface MenuItemRepository extends JpaRepository<MenuItem,Integer> {
 
 	Boolean existsByRestaurantIdAndName(Integer restaurantID,String name);
