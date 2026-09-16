@@ -1,5 +1,7 @@
 package com.ait.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<UserDTO> registerUser(@RequestBody UserRequestDto dto) {
-		UserDTO created = us.RegisterUser(dto);
+		UserDTO created = us.registerUser(dto);
 		return new ResponseEntity<>(created, HttpStatus.CREATED);
 	}
 
@@ -38,13 +40,22 @@ public class UserController {
 
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<UserDTO>> getUserName(@PathVariable String name) {
+
+	    List<UserDTO> dto = us.getUserByName(name);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	
 
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDTO> updateProfile(@PathVariable Long id,
 			@RequestBody UserDTO dto) {
 		return ResponseEntity.ok(us.updateProfile(id, dto));
 	}
-	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUser( @PathVariable Long id) { us.deleteUser(id);
 	return new ResponseEntity<>( "User deleted successfully", HttpStatus.OK );
