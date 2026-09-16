@@ -7,8 +7,7 @@ import com.ait.app.model.MenuItem;
 
 public interface MenuItemService {
 
-	MenuItemResponseDTO addMenuItem(int restaurantId,MenuItemRequestDTO request);
-    MenuItem updateMenuItem(int id, MenuItem menuItem);
+	MenuItemResponseDTO addMenuItem(int  restaurantId,MenuItemRequestDTO request);
 	
-
+	void deleteMenuItem(int itemId, Long ownerId);
 }
