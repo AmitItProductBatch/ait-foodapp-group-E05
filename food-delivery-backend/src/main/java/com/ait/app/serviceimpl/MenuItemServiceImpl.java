@@ -20,10 +20,10 @@ import com.ait.app.service.MenuItemService;
 public class MenuItemServiceImpl implements MenuItemService  {
 	
 	@Autowired
-    private RestaurantRepository restaurantRepository;
+    RestaurantRepository restaurantRepository;
 	
 	@Autowired
-	private MenuItemRepository menuItemRepository;
+	MenuItemRepository menuItemRepository;
 	@Override
 	public MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request) {
 	

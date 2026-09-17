@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 public class MenuItemController {
 	
 	@Autowired
-	private MenuItemService menuItemService;
+	MenuItemService menuItemService;
 	
 	@PostMapping("/menus")
 	public ResponseEntity addMenuItem(@RequestBody MenuItemRequestDTO request ){
