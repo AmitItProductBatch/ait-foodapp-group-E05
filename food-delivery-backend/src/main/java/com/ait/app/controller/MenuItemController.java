@@ -19,29 +19,20 @@ import com.ait.app.service.MenuItemService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/MenuItems")
+@RequestMapping("/MenuItems")
 public class MenuItemController {
 	
 	@Autowired
 	private MenuItemService menuItemService;
 	
-	@Autowired
-	private RestaurantRepository restaurantRepository;
 	@PostMapping("/menus")
-	public ResponseEntity<Restaurant>addRestaurant(@RequestBody Restaurant restaurant){
-		Restaurant saved=restaurantRepository.save(restaurant);
-		return new ResponseEntity<>(saved,HttpStatus.CREATED);
+	public ResponseEntity addRestaurant(@RequestBody MenuItemRequestDTO request ){
+		MenuItemResponseDTO saved = menuItemService.addMenuItem(request);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 	
 	
-	@PostMapping("/{restaurantId}/menu")
-	public ResponseEntity<MenuItemResponseDTO>addMenuItem(@PathVariable int restaurantId, @Valid @RequestBody MenuItemRequestDTO request){
-
-	MenuItemResponseDTO response =menuItemService.addMenuItem(restaurantId,request);
-	return new ResponseEntity<>(response, HttpStatus.CREATED);
 	
-	
-	}
 	
 }
 	

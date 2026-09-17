@@ -1,10 +1,14 @@
 package com.ait.app.serviceimpl;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.MenuItemAlreadyExsistsException;
+import com.ait.app.exception.RestaurantCustomException;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
 import com.ait.app.repository.MenuItemRepository;
@@ -21,14 +25,18 @@ public class MenuItemServiceImpl implements MenuItemService  {
 	@Autowired
 	private MenuItemRepository menuItemRepository;
 	@Override
-	public MenuItemResponseDTO addMenuItem(int  restaurantId, MenuItemRequestDTO request) {
+	public MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request) {
 	
-		Restaurant restaurant=restaurantRepository.findById(restaurantId).get();
+		Optional<Restaurant> restaurantOptional =restaurantRepository.findById(request.getRestaurantId());
+		 if (!restaurantOptional.isPresent()) {
+		        throw new RestaurantCustomException("Restaurant not found with ID", HttpStatus.NOT_FOUND);
+		    }
+		 
+		 Restaurant restaurant = restaurantOptional.get();
 		
-		
-		if(menuItemRepository.existsByRestaurantIdAndName(restaurantId, request.getName())) {
-			throw new MenuItemAlreadyExsistsException("Menu item already exists for this restaurants");
-		}
+		 if (menuItemRepository.existsByRestaurantIdAndName(request.getRestaurantId(), request.getName())) {
+				throw new MenuItemAlreadyExsistsException("Menu item already exists for this restaurant");
+			}
 		
 		MenuItem menuItem=new MenuItem();
 		menuItem.setName(request.getName());
