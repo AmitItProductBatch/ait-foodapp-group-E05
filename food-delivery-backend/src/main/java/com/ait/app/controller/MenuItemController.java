@@ -28,10 +28,23 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/MenuItems")
+@RequestMapping("/MenuItems")
 public class MenuItemController {
 
 	@Autowired
+	MenuItemService menuItemService;
+	
+	@PostMapping("/menus")
+	public ResponseEntity addMenuItem(@RequestBody MenuItemRequestDTO request ){
+		MenuItemResponseDTO saved = menuItemService.addMenuItem(request);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
+	}
+	
+	
+	
+	
+}
+	
 	private MenuItemService menuItemService;
 
 	@Autowired

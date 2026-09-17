@@ -10,6 +10,7 @@ import com.ait.app.model.MenuItem;
 
 public interface MenuItemService {
 
+	MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request);
 	MenuItemResponseDTO addMenuItem(int restaurantId, MenuItemRequestDTO request);
 
 	List<CategoryMenuDto> getMenuByRestaurantId(int restaurantId);

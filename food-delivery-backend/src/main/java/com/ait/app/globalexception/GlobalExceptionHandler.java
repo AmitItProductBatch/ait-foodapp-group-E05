@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.ait.app.exception.CartItemCustomException;
 import com.ait.app.exception.AddressCustomException;
 import com.ait.app.exception.FeedbackCustomException;
 import com.ait.app.exception.UserServiceCustomException;
