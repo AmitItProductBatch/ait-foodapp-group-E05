@@ -26,7 +26,7 @@ public class MenuItemController {
 	private MenuItemService menuItemService;
 	
 	@PostMapping("/menus")
-	public ResponseEntity addRestaurant(@RequestBody MenuItemRequestDTO request ){
+	public ResponseEntity addMenuItem(@RequestBody MenuItemRequestDTO request ){
 		MenuItemResponseDTO saved = menuItemService.addMenuItem(request);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
