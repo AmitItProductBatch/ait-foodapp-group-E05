@@ -3,6 +3,7 @@ package com.ait.app.requestbody;
 public class CartRequestDto {
     private Long userId;
     private int restaurantId;
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -16,7 +17,6 @@ public class CartRequestDto {
 		this.restaurantId = restaurantId;
 	}
 
-    
     
 
 }

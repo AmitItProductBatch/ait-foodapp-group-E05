@@ -17,11 +17,15 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long userId;
     private int restaurantId;
     private Double totalAmount = 0.0;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
 
 	public Long getId() {
 		return id;
@@ -38,6 +42,7 @@ public class Cart {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
 
 	public int getRestaurantId() {
 		return restaurantId;
@@ -70,6 +75,15 @@ public class Cart {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
+	
 
 
     
