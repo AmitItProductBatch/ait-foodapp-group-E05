@@ -17,19 +17,10 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private Long userId;
-
-    private Long restaurantId;
-
-    @Column(nullable = false)
+    private int restaurantId;
     private Double totalAmount = 0.0;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
-
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
 	public Long getId() {
@@ -48,11 +39,11 @@ public class Cart {
 		this.userId = userId;
 	}
 
-	public Long getRestaurantId() {
+	public int getRestaurantId() {
 		return restaurantId;
 	}
 
-	public void setRestaurantId(Long restaurantId) {
+	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;
 	}
 

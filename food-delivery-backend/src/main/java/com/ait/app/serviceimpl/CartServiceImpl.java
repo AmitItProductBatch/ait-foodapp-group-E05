@@ -50,10 +50,11 @@ public class CartServiceImpl implements CartService{
 		 Cart sc = cr.save(c);
 		 
 		 CartResponseDto cdto = new CartResponseDto();
+		 cdto.setId(sc.getId());
 		 cdto.setUserId(sc.getUserId());
 		 cdto.setRestaurantId(sc.getRestaurantId());
 		 cdto.setTotalAmount(sc.getTotalAmount());
-		 cdto.setCreatedAt(cdto.getCreatedAt());
+		 cdto.setCreatedAt(sc.getCreatedAt());
 		 cdto.setUpdatedAt(sc.getUpdatedAt());
 			
 		return cdto;
