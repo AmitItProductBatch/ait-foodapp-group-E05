@@ -44,7 +44,6 @@ public class Cart {
 	}
 
 
-
 	public int getRestaurantId() {
 		return restaurantId;
 	}
