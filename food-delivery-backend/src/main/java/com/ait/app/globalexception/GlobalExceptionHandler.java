@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(CartItemCustomException.class)
-    public ResponseEntity<String> CartItemExceptionHandler(UserServiceCustomException e) {
+    public ResponseEntity<String> CartItemExceptionHandler(CartItemCustomException e) {
         return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
     
