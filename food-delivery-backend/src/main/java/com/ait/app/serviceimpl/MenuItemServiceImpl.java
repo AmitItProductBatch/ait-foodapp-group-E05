@@ -31,22 +31,17 @@ import com.ait.app.service.MenuItemService;
 public class MenuItemServiceImpl implements MenuItemService {
 
 	@Autowired
-	RestaurantRepository restaurantRepository;
+	private RestaurantRepository restaurantRepository;
 
 	@Autowired
-	MenuItemRepository menuItemRepository;
+	private MenuItemRepository menuItemRepository;
 
 	@Override
-	public MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request) {
+	public MenuItemResponseDTO addMenuItem(int restaurantId, MenuItemRequestDTO request) {
 
-		Optional<Restaurant> restaurantOptional = restaurantRepository.findById(request.getRestaurantId());
-		
-		if (!restaurantOptional.isPresent()) {
-			throw new RestaurantCustomException("Restaurant not found with id: ", HttpStatus.NOT_FOUND);
-		}
-		Restaurant restaurant = restaurantOptional.get();
-		
-		if (menuItemRepository.existsByRestaurantIdAndName(request.getRestaurantId(), request.getName())) {
+		Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
+
+		if (menuItemRepository.existsByRestaurantIdAndName(restaurantId, request.getName())) {
 			throw new MenuItemAlreadyExsistsException("Menu item already exists for this restaurants");
 		}
 
@@ -73,6 +68,26 @@ public class MenuItemServiceImpl implements MenuItemService {
 		return response;
 		
 		
+	}
+	@Override
+	public MenuItem updateMenuItem(int id, MenuItem menuItem) {
+
+	    MenuItem existingItem = menuItemRepository.findById(id).orElse(null);
+
+	    if (existingItem == null) {
+	        return null;
+	    }
+
+	    existingItem.setName(menuItem.getName());
+	    existingItem.setDescription(menuItem.getDescription());
+	    existingItem.setPrice(menuItem.getPrice());
+	    existingItem.setAvailability(menuItem.getAvailability());
+	    existingItem.setCategory(menuItem.getCategory());
+
+	    return menuItemRepository.save(existingItem);
+	}
+	
+
 	}
 	
 	@Override

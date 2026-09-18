@@ -30,11 +30,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAddressException(AddressCustomException e) {
         return new ResponseEntity<>(e.getErrMsg(), e.getStatus());
     }
-    
-    @ExceptionHandler(CartItemCustomException.class)
-    public ResponseEntity<String> CartItemExceptionHandler(UserServiceCustomException e) {
-        return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
-    }
-    
-    
 }
