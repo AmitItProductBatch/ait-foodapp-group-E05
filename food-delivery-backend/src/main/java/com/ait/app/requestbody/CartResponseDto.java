@@ -1,6 +1,7 @@
 package com.ait.app.requestbody;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CartResponseDto {
 	
@@ -10,6 +11,7 @@ public class CartResponseDto {
     private Double totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<CartItemDetailsDto> items;
   
 	public Long getId() {
 		return id;
@@ -48,6 +50,15 @@ public class CartResponseDto {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+	public List<CartItemDetailsDto> getItems() {
+		return items;
+	}
+	public void setItems(List<CartItemDetailsDto> items) {
+		this.items = items;
+	}
+	public Long getCartId() {
+        return this.id;
+    }
     
     
 

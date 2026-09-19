@@ -31,5 +31,11 @@ public class CartController {
 		return new ResponseEntity<>(r, HttpStatus.CREATED);
 	}
 	
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<CartResponseDto> viewCart(@PathVariable Long userId) {
+		CartResponseDto r = cs.getCart(userId);
+		return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+	
 	
 }

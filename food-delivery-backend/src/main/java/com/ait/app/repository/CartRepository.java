@@ -7,5 +7,7 @@ import com.ait.app.model.Cart;
 public interface CartRepository extends JpaRepository<Cart, Long>{
 
 	boolean existsByUserId(Long userId);
+	
+    Cart findByUserId(Long userId); 
 
 }
