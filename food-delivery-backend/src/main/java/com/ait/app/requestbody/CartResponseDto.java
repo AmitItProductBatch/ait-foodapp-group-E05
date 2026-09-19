@@ -10,6 +10,7 @@ public class CartResponseDto {
     private Double totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 	public Long getId() {
 		return id;
 	}
@@ -22,7 +23,7 @@ public class CartResponseDto {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	
+
 	public int getRestaurantId() {
 		return restaurantId;
 	}
