@@ -11,6 +11,7 @@ import com.ait.app.model.MenuItem;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.requestbody.PriceCalculationRequestDto;
 import com.ait.app.requestbody.PriceCalculationResponseDto;
+import com.ait.app.requestbody.PriceResponseDto;
 import com.ait.app.service.PriceService;
 
 @Service
@@ -49,6 +50,28 @@ public class PriceServiceImpl implements PriceService {
 
 		return response;
 
+	}
+
+	@Override
+	public PriceResponseDto getPrice(int itemId) {
+
+		Optional<MenuItem> items = menuItemRepository.findById(itemId);
+		
+		if(!items.isPresent()) {
+			
+		throw new PriceCustomException("Menu item not found", HttpStatus.NOT_FOUND);
+		}
+		
+		MenuItem item = items.get();
+		
+		PriceResponseDto response = new PriceResponseDto();
+		
+		response.setItemId(item.getId());
+		response.setPrice(item.getPrice());
+		
+		return response;
+
+		
 	}
 
 }
