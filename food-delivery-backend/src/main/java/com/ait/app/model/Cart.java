@@ -43,7 +43,6 @@ public class Cart {
 		this.userId = userId;
 	}
 
-
 	public int getRestaurantId() {
 		return restaurantId;
 	}

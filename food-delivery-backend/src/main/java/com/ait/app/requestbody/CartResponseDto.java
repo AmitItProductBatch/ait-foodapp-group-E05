@@ -10,7 +10,7 @@ public class CartResponseDto {
     private Double totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-  
+
 	public Long getId() {
 		return id;
 	}

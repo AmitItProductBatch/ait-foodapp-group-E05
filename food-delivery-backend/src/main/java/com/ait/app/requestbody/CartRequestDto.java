@@ -13,10 +13,12 @@ public class CartRequestDto {
 	public int getRestaurantId() {
 		return restaurantId;
 	}
-	public void setRestaurantId(int restaurantId) {
+	public void setRestaurantId(int restaurantId) 
+	{
 		this.restaurantId = restaurantId;
 	}
 
-    
+	
+ 
 
 }
