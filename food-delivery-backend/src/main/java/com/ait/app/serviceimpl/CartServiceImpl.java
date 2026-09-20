@@ -1,6 +1,8 @@
 package com.ait.app.serviceimpl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.Cart;
+import com.ait.app.model.CartItem;
+import com.ait.app.model.MenuItem;
 import com.ait.app.model.User;
 import com.ait.app.repository.CartRepository;
+import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.UserRepository;
+import com.ait.app.requestbody.CartItemDetailsDto;
 import com.ait.app.requestbody.CartRequestDto;
 import com.ait.app.requestbody.CartResponseDto;
 import com.ait.app.service.CartService;
@@ -24,6 +30,9 @@ public class CartServiceImpl implements CartService{
 	
 	@Autowired
 	UserRepository ur;
+	
+	@Autowired
+	MenuItemRepository mir;
 	
 	@Override
 	public CartResponseDto addCart(CartRequestDto dto) {
@@ -59,6 +68,65 @@ public class CartServiceImpl implements CartService{
 			
 		return cdto;
 	}
+
+	@Override
+	public CartResponseDto getCart(Long userId) {
+		// TODO Auto-generated method stub
+		
+        if (userId == null) {
+            throw new UserServiceCustomException("UserId cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        
+        Cart c = cr.findByUserId(userId);
+        CartResponseDto responseDto = new CartResponseDto();
+        List<CartItemDetailsDto> itemDetailsList = new ArrayList();
+        
+        if (c == null) {
+            responseDto.setId(null);
+            responseDto.setUserId(userId);
+            responseDto.setRestaurantId(0);
+            responseDto.setTotalAmount(0.0); 
+            responseDto.setItems(itemDetailsList);
+            return responseDto;
+        }
+        
+        responseDto.setId(c.getId());
+        responseDto.setUserId(c.getUserId());
+        responseDto.setRestaurantId(c.getRestaurantId());
+        
+        if (c.getTotalAmount() != null) {
+            responseDto.setTotalAmount(c.getTotalAmount());
+        } else {
+            responseDto.setTotalAmount(0.0);
+        }
+        
+        responseDto.setCreatedAt(c.getCreatedAt());
+        responseDto.setUpdatedAt(c.getUpdatedAt());
+        
+        if (c.getCartItems() != null && !c.getCartItems().isEmpty()) {
+            for (CartItem item : c.getCartItems()) {
+                CartItemDetailsDto itemDto = new CartItemDetailsDto();
+                itemDto.setId(item.getId());
+                itemDto.setMenuItemId(item.getMenuItemId());
+                itemDto.setQuantity(item.getQuantity());
+                itemDto.setUnitPrice(item.getUnitPrice());
+                itemDto.setSubtotal(item.getSubtotal());
+                
+                Optional<MenuItem> o = mir.findById(item.getMenuItemId());
+                if (o.isPresent()) {
+                    itemDto.setName(o.get().getName());
+                } else {
+                    itemDto.setName("Unknown Selection");
+                }
+
+                itemDetailsList.add(itemDto);
+            }
+        }
+
+        responseDto.setItems(itemDetailsList);
+        return responseDto;
+    }
+                
 
 	
 
