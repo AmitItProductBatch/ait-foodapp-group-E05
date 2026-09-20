@@ -16,7 +16,11 @@ import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.requestbody.CartItemRequestDto;
 import com.ait.app.requestbody.CartItemResponseDto;
+import com.ait.app.requestbody.CartResponseDto;
+import com.ait.app.requestbody.QuantityUpdateDTO;
 import com.ait.app.service.CartItemService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CartItemServiceImpl implements CartItemService{
@@ -85,6 +89,51 @@ public class CartItemServiceImpl implements CartItemService{
 		return response;
 	}
 
+	@Override
+	@Transactional
+	public CartResponseDto updateQuantity(Long itemId, QuantityUpdateDTO dto) {
+		if(dto==null) {
+			throw new CartItemCustomException("request body can not be empty", HttpStatus.BAD_REQUEST);
 	
+	}
+       if(dto.getQuantity()<0) {
+    	   throw new CartItemCustomException("Quantity cannot be negative", HttpStatus.BAD_REQUEST);
+       }
+Optional<CartItem> optionalCartItem=cir.findById(itemId);
+if(!optionalCartItem.isPresent()) {
+	throw new CartItemCustomException("CartItem not found in users cart", HttpStatus.NOT_FOUND);
+	
+}
+CartItem cartitem=optionalCartItem.get();
+Cart cart=cartitem.getCart();
+if(cart==null) {
+	throw new CartItemCustomException("Cart not found", HttpStatus.NOT_FOUND);
+}
+if(dto.getQuantity()==0) {
+	cart.getCartItems().remove(cartitem);
+	cir.delete(cartitem);
+}else {
+	cartitem.setQuantity(dto.getQuantity());
+	double subtotal=dto.getQuantity()*cartitem.getUnitPrice();
+	cartitem.setSubtotal(subtotal);
+	cir.save(cartitem);
+}
+double totalAmount=0.0;
+for(CartItem item:cart.getCartItems()) {
+	totalAmount+=item.getSubtotal();
+}
+cart.setTotalAmount(totalAmount);
+cart.setUpdatedAt(LocalDateTime.now());
+cr.save(cart);
 
+CartResponseDto response = new CartResponseDto();
+response.setId(cart.getId());
+response.setUserId(cart.getUserId());
+response.setRestaurantId(cart.getRestaurantId());
+response.setTotalAmount(cart.getTotalAmount());
+response.setCreatedAt(cart.getCreatedAt());
+response.setUpdatedAt(cart.getUpdatedAt());
+       return response ;
+	}
+	
 }

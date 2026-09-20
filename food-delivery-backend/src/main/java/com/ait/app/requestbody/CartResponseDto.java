@@ -1,6 +1,8 @@
 package com.ait.app.requestbody;
 
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CartResponseDto {
 	
@@ -10,9 +12,16 @@ public class CartResponseDto {
     private Double totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<CartItemResponseDto> cartitems;
   
 	public Long getId() {
 		return id;
+	}
+	public List<CartItemResponseDto> getCartitems() {
+		return cartitems;
+	}
+	public void setCartitems(List<CartItemResponseDto> cartitems) {
+		this.cartitems = cartitems;
 	}
 	public void setId(Long id) {
 		this.id = id;
