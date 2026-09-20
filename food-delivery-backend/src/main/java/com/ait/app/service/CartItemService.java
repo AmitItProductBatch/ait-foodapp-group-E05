@@ -7,5 +7,6 @@ public interface CartItemService {
 	
 	CartItemResponseDto addToCart(CartItemRequestDto dto);
 	
+	void deleteCartItem(int itemId);
 
 }
