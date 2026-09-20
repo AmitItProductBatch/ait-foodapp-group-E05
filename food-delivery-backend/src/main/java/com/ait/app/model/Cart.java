@@ -13,7 +13,7 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Cart {
-	
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -82,6 +82,8 @@ public class Cart {
 	public void setCartItems(List<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
+
+	
 	
 
 
