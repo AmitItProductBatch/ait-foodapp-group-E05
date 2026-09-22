@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ait.app.exception.OrderServiceCustomException;
 import com.ait.app.model.Cart;
@@ -39,6 +41,7 @@ public class OrderServiceImpl implements OrderService{
 	CartItemRepository cir;
 
 	@Override
+    @Transactional(isolation = Isolation.SERIALIZABLE) 
 	public OrderResponseDto placeOrder(OrderRequestDto dto) {
 		// TODO Auto-generated method stub
 		Cart c = cr.findByUserId(dto.getUserId());
