@@ -6,5 +6,6 @@ import com.ait.app.requestbody.CartResponseDto;
 public interface CartService {
 	
 	CartResponseDto addCart(CartRequestDto dto);
+	CartResponseDto getCart(Long userId); 
 
 }

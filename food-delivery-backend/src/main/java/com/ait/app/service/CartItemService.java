@@ -8,6 +8,8 @@ import com.ait.app.requestbody.QuantityUpdateDTO;
 public interface CartItemService {
 
 	CartItemResponseDto addToCart(CartItemRequestDto dto);
+	
+	void deleteCartItem(int itemId);
 
 	CartResponseDto updateQuantity(Long itemId, QuantityUpdateDTO dto);
 }

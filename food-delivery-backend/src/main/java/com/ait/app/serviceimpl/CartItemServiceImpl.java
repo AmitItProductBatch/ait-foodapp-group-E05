@@ -1,6 +1,7 @@
 package com.ait.app.serviceimpl;
 
 import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,32 @@ response.setTotalAmount(cart.getTotalAmount());
 response.setCreatedAt(cart.getCreatedAt());
 response.setUpdatedAt(cart.getUpdatedAt());
        return response ;
+	public void deleteCartItem(int itemId) {
+		Optional<CartItem> optionalCartItem = cir.findById(itemId);
+
+	    if (!optionalCartItem.isPresent()) {
+	        throw new CartItemCustomException(
+	                "Cart item not found",
+	                HttpStatus.NOT_FOUND
+	        );
+	    }
+
+	    CartItem cartItem = optionalCartItem.get();
+	    Cart cart = cartItem.getCart();
+
+	    cir.delete(cartItem);
+
+	    double remainingTotal = cart.getTotalAmount() - cartItem.getSubtotal();
+
+	    if (remainingTotal < 0) {
+	        remainingTotal = 0;
+	    }
+
+	    cart.setTotalAmount(remainingTotal);
+	    cart.setUpdatedAt(LocalDateTime.now());
+
+	    cr.save(cart);
 	}
 	
 }
+
