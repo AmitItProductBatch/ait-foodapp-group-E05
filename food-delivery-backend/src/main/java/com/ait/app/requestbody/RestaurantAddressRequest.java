@@ -3,22 +3,17 @@ package com.ait.app.requestbody;
 public class RestaurantAddressRequest {
 	
 	private int restaurantId;
-	private int houseNo;
 	private String streetName;
 	private String landmark;
+	private String area;
 	private String city;
 	private int pinCode;
+	
 	public int getRestaurantId() {
 		return restaurantId;
 	}
 	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;
-	}
-	public int getHouseNo() {
-		return houseNo;
-	}
-	public void setHouseNo(int houseNo) {
-		this.houseNo = houseNo;
 	}
 	public String getStreetName() {
 		return streetName;
@@ -44,6 +39,13 @@ public class RestaurantAddressRequest {
 	public void setPinCode(int pinCode) {
 		this.pinCode = pinCode;
 	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	
 	
 	
 
