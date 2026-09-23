@@ -26,42 +26,77 @@ import com.ait.app.requestbody.OrderResponseDto;
 import com.ait.app.service.OrderService;
 
 @Service
-public class OrderServiceImpl implements OrderService{
-	
-	@Autowired
-	OrderRepository or;
-	
-	@Autowired
-	CartRepository cr;
-	
-	@Autowired
-	MenuItemRepository mir;
-	
-	@Autowired
-	CartItemRepository cir;
+public class OrderServiceImpl implements OrderService {
 
-	@Override
-    @Transactional(isolation = Isolation.SERIALIZABLE) 
-	public OrderResponseDto placeOrder(OrderRequestDto dto) {
-		// TODO Auto-generated method stub
-		Cart c = cr.findByUserId(dto.getUserId());
-		
-        if (c == null || c.getCartItems() == null || c.getCartItems().isEmpty() || c.getTotalAmount() == null || c.getTotalAmount() <= 0.0) {
-            throw new OrderServiceCustomException("Cannot place order: Cart is empty or has zero balance", HttpStatus.BAD_REQUEST);
+    @Autowired
+    OrderRepository or;
+
+    @Autowired
+    CartRepository cr;
+
+    @Autowired
+    MenuItemRepository mir;
+
+    @Autowired
+    CartItemRepository cir;
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public OrderResponseDto placeOrder(OrderRequestDto dto) {
+
+        // Find cart using user ID
+        Optional<Cart> optionalCart =
+            cr.findByUserId(dto.getUserId());
+
+        if (!optionalCart.isPresent()) {
+
+            throw new OrderServiceCustomException(
+                "Cannot place order: Cart not found",
+                HttpStatus.NOT_FOUND
+            );
         }
-        
+
+        Cart c = optionalCart.get();
+
+        if (c.getCartItems() == null ||
+            c.getCartItems().isEmpty() ||
+            c.getTotalAmount() == null ||
+            c.getTotalAmount() <= 0.0) {
+
+            throw new OrderServiceCustomException(
+                "Cannot place order: Cart is empty or has zero balance",
+                HttpStatus.BAD_REQUEST
+            );
+        }
+
         for (CartItem item : c.getCartItems()) {
-            Optional<MenuItem> o = mir.findById(item.getMenuItemId());
+
+            Optional<MenuItem> o =
+                mir.findById(item.getMenuItemId());
+
             if (!o.isPresent()) {
-                throw new OrderServiceCustomException("Item missing in store menu", HttpStatus.NOT_FOUND);
+
+                throw new OrderServiceCustomException(
+                    "Item missing in store menu",
+                    HttpStatus.NOT_FOUND
+                );
             }
+
             MenuItem mi = o.get();
-            if (mi.getAvailability() != null && !mi.getAvailability()) {
-                throw new OrderServiceCustomException("Food item out of stock: " + mi.getName(), HttpStatus.GONE);
+
+            if (mi.getAvailability() != null &&
+                !mi.getAvailability()) {
+
+                throw new OrderServiceCustomException(
+                    "Food item out of stock: " + mi.getName(),
+                    HttpStatus.GONE
+                );
             }
         }
-        
+
+        // Create Order
         Orders order = new Orders();
+
         order.setUserId(dto.getUserId());
         order.setRestaurantId(c.getRestaurantId());
         order.setTotalAmount(c.getTotalAmount());
@@ -69,31 +104,54 @@ public class OrderServiceImpl implements OrderService{
         order.setPaymentMethod(dto.getPaymentMethod());
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
-        
-        List<OrderItem> orderItemsList = new ArrayList<>();
-        for(CartItem ci : c.getCartItems()) {
-        	OrderItem orderItem = new OrderItem();
-        	orderItem.setOrders(order);
-        	orderItem.setMenuItemId(ci.getMenuItemId());
-        	orderItem.setQuantity(ci.getQuantity());
-        	orderItem.setSubtotal(ci.getSubtotal());
-        	orderItem.setUnitPrice(ci.getUnitPrice());
-        	
-        	orderItemsList.add(orderItem);
+
+        // Create Order Items
+        List<OrderItem> orderItemsList =
+            new ArrayList<OrderItem>();
+
+        for (CartItem ci : c.getCartItems()) {
+
+            OrderItem orderItem = new OrderItem();
+
+            orderItem.setOrders(order);
+            orderItem.setMenuItemId(ci.getMenuItemId());
+            orderItem.setQuantity(ci.getQuantity());
+            orderItem.setSubtotal(ci.getSubtotal());
+            orderItem.setUnitPrice(ci.getUnitPrice());
+
+            orderItemsList.add(orderItem);
         }
-        	order.setOrderItems(orderItemsList);
-        	Orders savedOrder = or.save(order);
-        	
-        	cir.deleteAll(c.getCartItems());
-        	c.setTotalAmount(0.0);
-        	cr.save(c);
-        	
-            OrderResponseDto response = new OrderResponseDto();
-            response.setOrderId(savedOrder.getId());
-            response.setTotalAmount(savedOrder.getTotalAmount());
 
-		
-		return response;
-	}
+        order.setOrderItems(orderItemsList);
 
+        // Save Order
+        Orders savedOrder = or.save(order);
+
+        // Clear Cart Items
+        cir.deleteAll(c.getCartItems());
+
+        // Clear cart list
+        c.getCartItems().clear();
+
+        // Reset restaurant
+        c.setRestaurantId(0);
+
+        // Reset total amount
+        c.setTotalAmount(0.0);
+
+        // Update time
+        c.setUpdatedAt(LocalDateTime.now());
+
+        // Save updated cart
+        cr.save(c);
+
+        // Create response
+        OrderResponseDto response =
+            new OrderResponseDto();
+
+        response.setOrderId(savedOrder.getId());
+        response.setTotalAmount(savedOrder.getTotalAmount());
+
+        return response;
+    }
 }
