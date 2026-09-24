@@ -15,10 +15,10 @@ public class ClearCartController {
     private CartService cartService;
 
     @DeleteMapping("/api/cart")
-    public ResponseEntity<Void> clearCart(@RequestParam Long userId) {
+    public ResponseEntity<String> clearCart(@RequestParam Long userId) {
 
         cartService.clearCart(userId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Cart cleared successfully");
     }
 }
