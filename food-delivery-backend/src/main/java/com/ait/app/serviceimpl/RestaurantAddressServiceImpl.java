@@ -28,6 +28,10 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		if (ResAddReq.getRestaurantId() <= 0) {
 			throw new RestaurantCustomException("Restaurant ID is required", HttpStatus.BAD_REQUEST);
 		}
+		
+		if (ResAddReq.getArea() == null || ResAddReq.getArea().isEmpty()) {
+			throw new RestaurantCustomException("Area is required", HttpStatus.BAD_REQUEST);
+		}
 
 		if (ResAddReq.getStreetName() == null || ResAddReq.getStreetName().isEmpty()) {
 			throw new RestaurantCustomException("Street name is required", HttpStatus.BAD_REQUEST);
@@ -55,7 +59,7 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 
 		RestaurantAddress address = new RestaurantAddress();
 
-		address.setHouseNo(ResAddReq.getHouseNo());
+		address.setArea(ResAddReq.getArea());
 		address.setStreetName(ResAddReq.getStreetName());
 		address.setLandmark(ResAddReq.getLandmark());
 		address.setCity(ResAddReq.getCity());
@@ -87,6 +91,13 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		if (address == null) {
 			throw new RestaurantCustomException("Restaurant address not found", HttpStatus.NOT_FOUND);
 		}
+		
+		if (ResAddReq.getArea() == null || ResAddReq.getArea().isEmpty()) {
+			throw new RestaurantCustomException(
+					"Area is required",
+					HttpStatus.BAD_REQUEST);
+		}
+		
 		if (ResAddReq.getStreetName() == null || ResAddReq.getStreetName().isEmpty()) {
 			throw new RestaurantCustomException("Street name is required", HttpStatus.BAD_REQUEST);
 		}
@@ -96,7 +107,7 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		if (ResAddReq.getPinCode() <= 0) {
 			throw new RestaurantCustomException("Pin code is required", HttpStatus.BAD_REQUEST);
 		}
-		address.setHouseNo(ResAddReq.getHouseNo());
+		address.setArea(ResAddReq.getArea());
 		address.setStreetName(ResAddReq.getStreetName());
 		address.setLandmark(ResAddReq.getLandmark());
 		address.setCity(ResAddReq.getCity());
@@ -110,7 +121,7 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		RestaurantAddressResponseDto dto = new RestaurantAddressResponseDto();
 
 		dto.setId(address.getId());
-		dto.setHouseNo(address.getHouseNo());
+		dto.setArea(address.getArea());
 		dto.setStreetname(address.getStreetName());
 		dto.setLandmark(address.getLandmark());
 		dto.setCity(address.getCity());

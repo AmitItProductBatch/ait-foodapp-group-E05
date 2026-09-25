@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.RestaurantCustomException;
 import com.ait.app.model.Restaurant;
+import com.ait.app.model.RestaurantAddress;
 import com.ait.app.model.User;
+import com.ait.app.repository.RestaurantAddressRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.requestbody.RestaurantDetailsDto;
@@ -26,6 +28,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Autowired
 	RestaurantRepository rr;
+	
+	@Autowired
+	RestaurantAddressRepository restaurantAddressRepository;
 
 	@Override
 	public RestaurantResponseDto addRestaurant(RestaurantRequestDto dto) {
@@ -126,4 +131,50 @@ public class RestaurantServiceImpl implements RestaurantService {
 		    return result;
 	}
 
+	@Override
+	public List<RestaurantDetailsDto> getRestaurantsByArea(String area) {
+		
+		if(area == null || area.isEmpty()) {
+			throw new RestaurantCustomException(
+					"Area is required",
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		List<RestaurantAddress> addresses = 
+				restaurantAddressRepository.findByAreaIgnoreCase(area);
+		
+		if(addresses.isEmpty()) {
+			
+			throw new RestaurantCustomException(""
+					+ "No restaurants found in area: " +area,
+					HttpStatus.NOT_FOUND);
+		}
+		List<RestaurantDetailsDto> result = new ArrayList<>();
+		
+		for(RestaurantAddress address : addresses) {
+			
+			Restaurant restaurant = address.getRestaurant();
+			
+			if (restaurant != null && restaurant.isActive()) {
+				
+				RestaurantDetailsDto dto = new RestaurantDetailsDto();
+				
+				dto.setId(restaurant.getId());
+				dto.setName(restaurant.getName());
+				dto.setAddress(restaurant.getAddress());
+				dto.setHours(restaurant.getHours());
+				dto.setCuisine(restaurant.getCuisine());
+				
+				result.add(dto);
+			}
+		}
+		
+		if (result.isEmpty()) {
+			throw new RestaurantCustomException("No active restaurants found in area: "+ area,
+					HttpStatus.NOT_FOUND);
+		}
+		
+		return result;
+	}
 }
+

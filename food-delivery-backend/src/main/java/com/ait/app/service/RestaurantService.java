@@ -9,7 +9,11 @@ import com.ait.app.requestbody.RestaurantResponseDto;
 public interface RestaurantService {
 	
 	RestaurantResponseDto addRestaurant(RestaurantRequestDto dto);
+	
 	RestaurantDetailsDto getRestaurantById(int id);
+	
 	 List<RestaurantDetailsDto> getRestaurantsByCuisine(String cuisine);
+	 
+	 List<RestaurantDetailsDto> getRestaurantsByArea(String area);
 
 }

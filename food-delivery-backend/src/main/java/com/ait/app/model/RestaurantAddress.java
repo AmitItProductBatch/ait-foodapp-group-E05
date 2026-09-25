@@ -16,9 +16,9 @@ public class RestaurantAddress {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private int houseNo;
 	private String streetName;
 	private String landmark;
+	private String area;
 	private String city;
 	private int pinCode;
 	
@@ -74,13 +74,15 @@ public class RestaurantAddress {
 		this.restaurant = restaurant;
 	}
 
-	public int getHouseNo() {
-		return houseNo;
+	public String getArea() {
+		return area;
 	}
 
-	public void setHouseNo(int houseNo) {
-		this.houseNo = houseNo;
+	public void setArea(String area) {
+		this.area = area;
 	}
+
+	
 	
 	
 	
