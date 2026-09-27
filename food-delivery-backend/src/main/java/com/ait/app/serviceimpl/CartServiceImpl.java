@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ait.app.exception.UserServiceCustomException;
 import com.ait.app.model.Cart;
@@ -126,6 +127,55 @@ public class CartServiceImpl implements CartService{
         responseDto.setItems(itemDetailsList);
         return responseDto;
     }
+
+	@Override
+	@Transactional
+	public void clearCart(Long userId) {
+
+		
+		if (userId == null) {
+			throw new UserServiceCustomException(
+					"UserId cannot be empty",
+					HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<User> user = ur.findById(userId);
+
+		if (!user.isPresent()) {
+			throw new UserServiceCustomException(
+					"User not found",
+					HttpStatus.NOT_FOUND);
+		}
+
+
+		Cart c = cr.findByUserId(userId);
+
+		if (c == null) {
+			return;
+		}
+
+		if (c.getUserId() == null || !c.getUserId().equals(userId)) {
+			throw new UserServiceCustomException(
+					"You are not allowed to clear this cart",
+					HttpStatus.FORBIDDEN);
+		}
+
+		if (c.getCartItems() != null) {
+			c.getCartItems().clear();
+		}
+
+		
+		c.setRestaurantId(0);
+
+		
+		c.setTotalAmount(0.0);
+
+		
+		c.setUpdatedAt(LocalDateTime.now());
+
+		
+		cr.save(c);
+	}
                 
 
 	
