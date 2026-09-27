@@ -84,6 +84,7 @@ public class OrderServiceImpl implements OrderService{
         	order.setOrderItems(orderItemsList);
         	Orders savedOrder = or.save(order);
         	
+        	c.setCartItems(new ArrayList<>());
         	cir.deleteAll(c.getCartItems());
         	c.setTotalAmount(0.0);
         	cr.save(c);
