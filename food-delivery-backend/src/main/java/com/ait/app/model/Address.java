@@ -1,6 +1,5 @@
 package com.ait.app.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,77 +12,92 @@ import jakarta.persistence.Table;
 @Table(name = "Address_info")
 public class Address {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-	private int houseNo;
-	private String streetName;
-	private String landmark;
-	private String city;
-	private int pinCode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
+    private int houseNo;
+    private String streetName;
+    private String landmark;
+    private String city;
+    private int pinCode;
 
-	@ManyToOne
-	@JoinColumn(name = "userId", referencedColumnName = "id")
-	private User user;
+    private double latitude;
+    private double longitude;
 
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private User user;
 
-	
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getHouseNo() {
-		return houseNo;
-	}
+    public int getHouseNo() {
+        return houseNo;
+    }
 
-	public void setHouseNo(int houseNo) {
-		this.houseNo = houseNo;
-	}
+    public void setHouseNo(int houseNo) {
+        this.houseNo = houseNo;
+    }
 
-	public String getStreetName() {
-		return streetName;
-	}
+    public String getStreetName() {
+        return streetName;
+    }
 
-	public void setStreetName(String streetName) {
-		this.streetName = streetName;
-	}
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
 
-	public String getLandmark() {
-		return landmark;
-	}
+    public String getLandmark() {
+        return landmark;
+    }
 
-	public void setLandmark(String landmark) {
-		this.landmark = landmark;
-	}
+    public void setLandmark(String landmark) {
+        this.landmark = landmark;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public int getPinCode() {
-		return pinCode;
-	}
+    public int getPinCode() {
+        return pinCode;
+    }
 
-	public void setPinCode(int pinCode) {
-		this.pinCode = pinCode;
-	}
+    public void setPinCode(int pinCode) {
+        this.pinCode = pinCode;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public double getLatitude() {
+        return latitude;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

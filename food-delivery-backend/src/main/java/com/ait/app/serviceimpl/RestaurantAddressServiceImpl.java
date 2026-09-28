@@ -64,6 +64,9 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		address.setLandmark(ResAddReq.getLandmark());
 		address.setCity(ResAddReq.getCity());
 		address.setPinCode(ResAddReq.getPinCode());
+		address.setLatitude(ResAddReq.getLatitude());
+		address.setLongitude(ResAddReq.getLongitude());
+		
 		address.setRestaurant(restaurant);
 
 		RestaurantAddress savedAddress = restaurantAddressRepository.save(address);
@@ -112,6 +115,10 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		address.setLandmark(ResAddReq.getLandmark());
 		address.setCity(ResAddReq.getCity());
 		address.setPinCode(ResAddReq.getPinCode());
+		address.setLatitude(ResAddReq.getLatitude());
+		address.setLongitude(ResAddReq.getLongitude());
+		
+		
 		RestaurantAddress updatedAddress = restaurantAddressRepository.save(address);
 		return convertToResponse(updatedAddress);
 	}
@@ -126,6 +133,9 @@ public class RestaurantAddressServiceImpl implements RestaurantAddressService {
 		dto.setLandmark(address.getLandmark());
 		dto.setCity(address.getCity());
 		dto.setPinCode(address.getPinCode());
+		dto.setLatitude(address.getLatitude());
+		dto.setLongitude(address.getLongitude());
+		
 
 		if (address.getRestaurant() != null) {
 			dto.setRestaurantId(address.getRestaurant().getId());
