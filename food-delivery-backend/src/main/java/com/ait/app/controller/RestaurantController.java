@@ -50,4 +50,14 @@ public class RestaurantController {
 
 	    return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
+	
+	@GetMapping("/area/{area}")
+	public ResponseEntity<List<RestaurantDetailsDto>> getRestaurantsByArea(
+			@PathVariable String area) {
+
+		List<RestaurantDetailsDto> dto =
+				restaurantService.getRestaurantsByArea(area);
+
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
 }

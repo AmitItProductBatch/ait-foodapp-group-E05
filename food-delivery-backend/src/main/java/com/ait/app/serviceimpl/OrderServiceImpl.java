@@ -21,6 +21,8 @@ import com.ait.app.repository.CartItemRepository;
 import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.OrderRepository;
+import com.ait.app.requestbody.OrderDetailsDto;
+import com.ait.app.requestbody.OrderItemDetailsDto;
 import com.ait.app.requestbody.OrderRequestDto;
 import com.ait.app.requestbody.OrderResponseDto;
 import com.ait.app.service.OrderService;
@@ -85,7 +87,9 @@ public class OrderServiceImpl implements OrderService{
         	Orders savedOrder = or.save(order);
         	
         	cir.deleteAll(c.getCartItems());
+        	c.getCartItems().clear();  
         	c.setTotalAmount(0.0);
+        	c.setRestaurantId(0);
         	cr.save(c);
         	
             OrderResponseDto response = new OrderResponseDto();
@@ -94,6 +98,66 @@ public class OrderServiceImpl implements OrderService{
 
 		
 		return response;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public OrderDetailsDto getOrderDetails(Long orderId) {
+
+	    Optional<Orders> optionalOrder = or.findById(orderId);
+
+	    if (!optionalOrder.isPresent()) {
+	        throw new OrderServiceCustomException(
+	                "Order not found",
+	                HttpStatus.NOT_FOUND);
+	    }
+
+	    Orders order = optionalOrder.get();
+
+	    OrderDetailsDto response = new OrderDetailsDto();
+
+	    response.setOrderId(order.getId());
+	    response.setUserId(order.getUserId());
+	    response.setRestaurantId(order.getRestaurantId());
+	    response.setDeliveryAddress(order.getDeliveryAddress());
+
+	    response.setTotalAmount(order.getTotalAmount());
+
+	    response.setStatus(order.getStatus());
+	    response.setPaymentStatus(order.getPaymentStatus());
+	    response.setPaymentMethod(order.getPaymentMethod());
+
+	    response.setCreatedAt(order.getCreatedAt());
+	    response.setUpdatedAt(order.getUpdatedAt());
+
+	    List<OrderItemDetailsDto> itemDetails = new ArrayList<>();
+
+	    if (order.getOrderItems() != null) {
+
+	        for (OrderItem orderItem : order.getOrderItems()) {
+
+	            OrderItemDetailsDto itemDto = new OrderItemDetailsDto();
+
+	            itemDto.setItemId(orderItem.getId());
+	            itemDto.setMenuItemId(orderItem.getMenuItemId());
+	            itemDto.setQuantity(orderItem.getQuantity());
+	            itemDto.setUnitPrice(orderItem.getUnitPrice());
+	            itemDto.setSubtotal(orderItem.getSubtotal());
+
+	            Optional<MenuItem> optionalMenuItem =
+	                    mir.findById(orderItem.getMenuItemId());
+
+	            if (optionalMenuItem.isPresent()) {
+	                itemDto.setItemName(optionalMenuItem.get().getName());
+	            }
+
+	            itemDetails.add(itemDto);
+	        }
+	    }
+
+	    response.setItems(itemDetails);
+
+	    return response;
 	}
 
 }

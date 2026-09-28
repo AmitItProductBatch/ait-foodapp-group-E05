@@ -3,10 +3,10 @@ package com.ait.app.requestbody;
 public class RestaurantAddressResponseDto {
 	
 	private int id;
-	private int restaurantId;
-	private int houseNo;
+	private int restaurantId;;
 	private String streetname;
 	private String landmark;
+	private String area;
 	private String city;
 	private int pinCode;
 	public int getId() {
@@ -20,12 +20,6 @@ public class RestaurantAddressResponseDto {
 	}
 	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;
-	}
-	public int getHouseNo() {
-		return houseNo;
-	}
-	public void setHouseNo(int houseNo) {
-		this.houseNo = houseNo;
 	}
 	public String getStreetname() {
 		return streetname;
@@ -50,6 +44,12 @@ public class RestaurantAddressResponseDto {
 	}
 	public void setPinCode(int pinCode) {
 		this.pinCode = pinCode;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
 	}
 	
 	
