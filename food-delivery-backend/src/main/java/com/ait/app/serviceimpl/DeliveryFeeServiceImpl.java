@@ -46,11 +46,10 @@ public class DeliveryFeeServiceImpl implements DeliveryFeeService{
         }
         Address userAddress = uo.get();
         
-        String url = "https://project-osrm.org"
+        String url = "https://router.project-osrm.org/route/v1/driving/"
                 + restaurantAddress.getLongitude() + "," + restaurantAddress.getLatitude() + ";"
                 + userAddress.getLongitude() + "," + userAddress.getLatitude()
                 + "?overview=false";
-
 
      RestTemplate restTemplate = new RestTemplate();
      ResponseEntity<Map> responseEntity = restTemplate.getForEntity(url, Map.class);
