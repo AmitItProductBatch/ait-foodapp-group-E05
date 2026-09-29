@@ -43,6 +43,9 @@ public class AddressServiceImpl implements AddressService {
         address.setLandmark(addressDto.getLandmark());
         address.setCity(addressDto.getCity());
         address.setPinCode(addressDto.getPincode());
+        address.setLatitude(addressDto.getLatitude());
+        address.setLongitude(addressDto.getLongitude());
+        
         address.setUser(user);
 
         addressRepo.save(address);
@@ -56,6 +59,9 @@ public class AddressServiceImpl implements AddressService {
         dto.setCity(addressDto.getCity());
         dto.setPincode(addressDto.getPincode());
         dto.setUserId(addressDto.getUserId());
+        dto.setLatitude(address.getLatitude());
+        dto.setLongitude(address.getLongitude());
+        
 
         return dto;
     }
@@ -77,6 +83,9 @@ public class AddressServiceImpl implements AddressService {
             dto.setLandmark(address.getLandmark());
             dto.setCity(address.getCity());
             dto.setPincode(address.getPinCode());
+            dto.setLatitude(address.getLatitude());
+            dto.setLongitude(address.getLongitude());
+            
 
             if (address.getUser() != null) {
                 dto.setUserId(address.getUser().getId());
@@ -107,6 +116,9 @@ public class AddressServiceImpl implements AddressService {
         dto.setLandmark(address.getLandmark());
         dto.setCity(address.getCity());
         dto.setPincode(address.getPinCode());
+        dto.setLatitude(address.getLatitude());
+        dto.setLongitude(address.getLongitude());
+        
 
         if (address.getUser() != null) {
             dto.setUserId(address.getUser().getId());
