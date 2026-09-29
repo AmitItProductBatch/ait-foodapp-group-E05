@@ -23,6 +23,5 @@ public class CartItemCustomException extends RuntimeException{
 		this.httpStatus = httpStatus;
 	}
 	
-	
 
 }

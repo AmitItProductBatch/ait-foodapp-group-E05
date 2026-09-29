@@ -21,7 +21,10 @@ public class RestaurantAddress {
 	private String area;
 	private String city;
 	private int pinCode;
+	private double latitude;
+	private double longitude;
 	
+
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
@@ -81,6 +84,24 @@ public class RestaurantAddress {
 	public void setArea(String area) {
 		this.area = area;
 	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
+	
 
 	
 	
