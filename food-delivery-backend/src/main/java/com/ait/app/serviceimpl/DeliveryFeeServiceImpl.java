@@ -12,8 +12,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ait.app.exception.PriceCustomException;
 import com.ait.app.model.Address;
+import com.ait.app.model.Cart;
 import com.ait.app.model.RestaurantAddress;
 import com.ait.app.repository.AddressRepo;
+import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.RestaurantAddressRepository;
 import com.ait.app.requestbody.DeliveryFeeRequestDto;
 import com.ait.app.requestbody.DeliveryFeeResponseDto;
@@ -27,6 +29,9 @@ public class DeliveryFeeServiceImpl implements DeliveryFeeService{
     
 	@Autowired
 	RestaurantAddressRepository restaurantAddressRepository;
+	
+    @Autowired
+    CartRepository cr;
 	
 
 	@Override
@@ -80,6 +85,19 @@ public class DeliveryFeeServiceImpl implements DeliveryFeeService{
         double baseFee = 35.0;      
         double perKmRate = 8.0;     
         double finalFee = baseFee + (distance * perKmRate);
+        
+        double freeDeliveryDistanceThreshold = 3.0;
+        if (distance <= freeDeliveryDistanceThreshold) {
+            finalFee = 0.0;
+        }
+        
+        if (userAddress != null) {
+            Cart c = cr.findByUserId((long) userAddress.getId());
+
+            if (c != null && c.getTotalAmount() >= 300) {
+                finalFee = 0.0;
+            }
+        }
         
         distance = Math.round(distance * 100.0) / 100.0;
         finalFee = Math.round(finalFee * 100.0) / 100.0;
