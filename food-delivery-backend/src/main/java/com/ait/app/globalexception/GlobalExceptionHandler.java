@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.ait.app.exception.CartItemCustomException;
+import com.ait.app.exception.DeliveryFeeException;
 import com.ait.app.exception.AddressCustomException;
 import com.ait.app.exception.FeedbackCustomException;
 import com.ait.app.exception.OrderServiceCustomException;
@@ -41,6 +42,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderServiceCustomException.class)
     public ResponseEntity<String> OrderServiceExceptionHandler(OrderServiceCustomException e) {
         return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+    }
+    
+    @ExceptionHandler(DeliveryFeeException.class)
+    public ResponseEntity<String> handleDeliveryFeeException(
+            DeliveryFeeException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                ex.getStatus());
     }
     
     
