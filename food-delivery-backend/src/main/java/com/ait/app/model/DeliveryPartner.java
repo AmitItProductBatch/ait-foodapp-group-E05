@@ -1,5 +1,8 @@
 package com.ait.app.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,9 @@ public class DeliveryPartner {
     private String email;
     private String vehicleType;
     private String vehicleNumber;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    
     private boolean available = true;
 	public Long getId() {
 		return id;
@@ -59,6 +65,19 @@ public class DeliveryPartner {
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
     
     
     

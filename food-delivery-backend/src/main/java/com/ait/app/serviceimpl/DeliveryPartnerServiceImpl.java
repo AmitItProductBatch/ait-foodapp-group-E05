@@ -1,5 +1,8 @@
 package com.ait.app.serviceimpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,8 @@ public class DeliveryPartnerServiceImpl implements DeliveryPartnerService{
         dp.setVehicleType(dto.getVehicleType());
         dp.setVehicleNumber(dto.getVehicleNumber());
         dp.setAvailable(dto.isAvailable());
+        dp.setCreatedAt(LocalDateTime.now());
+        dp.setUpdatedAt(LocalDateTime.now());
         DeliveryPartner savedDp = dpr.save(dp);
         
         DeliveryPartnerResponseDto rDto = new DeliveryPartnerResponseDto();
