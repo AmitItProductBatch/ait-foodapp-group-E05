@@ -6,5 +6,7 @@ import com.ait.app.requestbody.FeedbackResponseDto;
 public interface FeedbackService {
 	
 	FeedbackResponseDto createFeedback(FeedbackRequestDto dto);
+	
+	FeedbackResponseDto submitFeedback(FeedbackRequestDto dto);
 
 }
