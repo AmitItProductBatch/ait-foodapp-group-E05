@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(DeliveryPartnerCustomException.class)
-    public ResponseEntity<String> DeliveryPartnerCustomExceptionHandler(OrderServiceCustomException e) {
+    public ResponseEntity<String> DeliveryPartnerCustomExceptionHandler(DeliveryPartnerCustomException e) {
         return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
     
