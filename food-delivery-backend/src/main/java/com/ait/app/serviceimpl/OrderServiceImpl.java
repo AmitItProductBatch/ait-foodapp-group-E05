@@ -71,6 +71,7 @@ public class OrderServiceImpl implements OrderService{
         order.setPaymentMethod(dto.getPaymentMethod());
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
+        order.setOrderNumber("ORD-" + System.currentTimeMillis());
         
         List<OrderItem> orderItemsList = new ArrayList<>();
         for(CartItem ci : c.getCartItems()) {
