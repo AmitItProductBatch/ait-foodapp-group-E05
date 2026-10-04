@@ -29,6 +29,15 @@ public class FeedbackController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/submit")
+	public ResponseEntity<FeedbackResponseDto> submitFeedback(
+			@RequestBody FeedbackRequestDto dto) {
+
+		FeedbackResponseDto response =
+				feedbackService.submitFeedback(dto);
+
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 	
 	
 	
