@@ -121,6 +121,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return response;
 		
 	}
+
+	@Override
+	public void deleteFeedback(int id) {
+		
+		if(!feedbackRepo.existsById(id)) {
+			
+			throw new FeedbackCustomException("Feedback not found");
+		}
+		
+		feedbackRepo.deleteById(id);
+	}
 }
 	
 	
