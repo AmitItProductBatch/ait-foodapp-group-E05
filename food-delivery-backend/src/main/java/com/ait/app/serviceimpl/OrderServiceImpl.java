@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -22,6 +26,7 @@ import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.OrderRepository;
 import com.ait.app.requestbody.OrderDetailsDto;
+import com.ait.app.requestbody.OrderHistoryDto;
 import com.ait.app.requestbody.OrderItemDetailsDto;
 import com.ait.app.requestbody.OrderRequestDto;
 import com.ait.app.requestbody.OrderResponseDto;
@@ -158,6 +163,140 @@ public class OrderServiceImpl implements OrderService{
 	    response.setItems(itemDetails);
 
 	    return response;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<OrderHistoryDto> getOrderHistory(
+	        Long userId,
+	        int page,
+	        int size,
+	        String status,
+	        LocalDateTime fromDate,
+	        LocalDateTime toDate) {
+
+	    if (userId == null) {
+	        throw new OrderServiceCustomException(
+	                "User id is required",
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (page < 0) {
+	        throw new OrderServiceCustomException(
+	                "Page number cannot be negative",
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (size <= 0) {
+	        throw new OrderServiceCustomException(
+	                "Page size must be greater than zero",
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (size > 100) {
+	        throw new OrderServiceCustomException(
+	                "Page size cannot be greater than 100",
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (fromDate != null && toDate != null
+	            && fromDate.isAfter(toDate)) {
+
+	        throw new OrderServiceCustomException(
+	                "From date cannot be after to date",
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    Pageable pageable = PageRequest.of(
+	            page,
+	            size,
+	            Sort.by(
+	                    Sort.Direction.DESC,
+	                    "createdAt"));
+
+	    Page<Orders> ordersPage;
+
+	    boolean hasStatus = status != null && !status.trim().isEmpty();
+	    boolean hasFromDate = fromDate != null;
+	    boolean hasToDate = toDate != null;
+
+	    if (!hasStatus && !hasFromDate && !hasToDate) {
+
+	        ordersPage = or.findByUserId(
+	                userId,
+	                pageable);
+
+	    } else if (hasStatus && !hasFromDate && !hasToDate) {
+
+	        ordersPage = or.findByUserIdAndStatus(
+	                userId,
+	                status,
+	                pageable);
+
+	    } else if (!hasStatus && hasFromDate && hasToDate) {
+
+	        ordersPage = or.findByUserIdAndCreatedAtBetween(
+	                userId,
+	                fromDate,
+	                toDate,
+	                pageable);
+
+	    } else if (hasStatus && hasFromDate && hasToDate) {
+
+	        ordersPage = or.findByUserIdAndStatusAndCreatedAtBetween(
+	                userId,
+	                status,
+	                fromDate,
+	                toDate,
+	                pageable);
+
+	    } else if (!hasStatus && hasFromDate) {
+
+	        ordersPage = or.findByUserIdAndCreatedAtGreaterThanEqual(
+	                userId,
+	                fromDate,
+	                pageable);
+
+	    } else if (!hasStatus && hasToDate) {
+
+	        ordersPage = or.findByUserIdAndCreatedAtLessThanEqual(
+	                userId,
+	                toDate,
+	                pageable);
+
+	    } else if (hasStatus && hasFromDate) {
+
+	        ordersPage = or.findByUserIdAndStatusAndCreatedAtGreaterThanEqual(
+	                userId,
+	                status,
+	                fromDate,
+	                pageable);
+
+	    } else {
+
+	        ordersPage = or.findByUserIdAndStatusAndCreatedAtLessThanEqual(
+	                userId,
+	                status,
+	                toDate,
+	                pageable);
+	    }
+
+	    return ordersPage.map(order -> {
+
+	        OrderHistoryDto dto = new OrderHistoryDto();
+
+	        dto.setOrderId(order.getId());
+	        dto.setUserId(order.getUserId());
+	        dto.setRestaurantId(order.getRestaurantId());
+	        dto.setTotalAmount(order.getTotalAmount());
+	        dto.setStatus(order.getStatus());
+	        dto.setPaymentStatus(order.getPaymentStatus());
+	        dto.setPaymentMethod(order.getPaymentMethod());
+	        dto.setCreatedAt(order.getCreatedAt());
+	        dto.setUpdatedAt(order.getUpdatedAt());
+
+	        return dto;
+	    });
 	}
 
 }
