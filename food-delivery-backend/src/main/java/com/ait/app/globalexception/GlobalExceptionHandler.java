@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.ait.app.exception.CartItemCustomException;
 import com.ait.app.exception.DeliveryFeeException;
+import com.ait.app.exception.DeliveryPartnerCustomException;
 import com.ait.app.exception.AddressCustomException;
 import com.ait.app.exception.FeedbackCustomException;
 import com.ait.app.exception.OrderServiceCustomException;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(
                 ex.getMessage(),
-                org.springframework.http.HttpStatus.BAD_REQUEST);
+                ex.getStatus());
     }
 
     @ExceptionHandler(AddressCustomException.class)
@@ -51,6 +52,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 ex.getMessage(),
                 ex.getStatus());
+    }
+    
+    @ExceptionHandler(DeliveryPartnerCustomException.class)
+    public ResponseEntity<String> DeliveryPartnerCustomExceptionHandler(DeliveryPartnerCustomException e) {
+        return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
     
     
