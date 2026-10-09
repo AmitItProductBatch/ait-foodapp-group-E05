@@ -17,12 +17,15 @@ public class MenuItem {
 	private String description;
 	private Double price;
 	private Boolean availability;
-	private String category;
 	private String image;
 
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id", nullable = false)
 	private Restaurant restaurant;
+	
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
 
 	public Restaurant getRestaurant() {
 		return restaurant;
@@ -72,11 +75,11 @@ public class MenuItem {
 		this.availability = availability;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 

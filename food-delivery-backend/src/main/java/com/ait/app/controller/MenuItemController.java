@@ -1,15 +1,12 @@
 package com.ait.app.controller;
 
-
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ait.app.model.MenuItem;
 import com.ait.app.requestbody.CategoryMenuDto;
 import com.ait.app.requestbody.MenuItemRequestDTO;
 import com.ait.app.requestbody.MenuItemResponseDTO;
@@ -28,44 +24,48 @@ import com.ait.app.service.MenuItemService;
 @RequestMapping("/MenuItems")
 public class MenuItemController {
 
-	@Autowired
-	MenuItemService menuItemService;
+    @Autowired
+    private MenuItemService menuItemService;
 
-	@PostMapping("/menus")
-	public ResponseEntity addMenuItem(@RequestBody MenuItemRequestDTO request) {
-		MenuItemResponseDTO saved = menuItemService.addMenuItem(request);
-		return new ResponseEntity<>(saved, HttpStatus.CREATED);
-	}
+    @PostMapping("/menus")
+    public ResponseEntity<MenuItemResponseDTO> addMenuItem(
+            @RequestBody MenuItemRequestDTO request) {
 
-	@DeleteMapping("/{itemId}")
-	public ResponseEntity<Void> deleteMenuItem(
-	      @PathVariable int itemId,
-	      @RequestParam Long ownerId) 
-	{
-		menuItemService.deleteMenuItem(itemId, ownerId);
+        MenuItemResponseDTO saved =
+                menuItemService.addMenuItem(request);
 
-	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	    
-	}
+        return new ResponseEntity<>(
+                saved, HttpStatus.CREATED);
+    }
 
-	@GetMapping("/{restaurantId}/menu")
-	public ResponseEntity<List<CategoryMenuDto>> getMenu(@PathVariable int restaurantId) {
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> deleteMenuItem(
+            @PathVariable int itemId,
+            @RequestParam Long ownerId) {
 
-		List<CategoryMenuDto> menu = menuItemService.getMenuByRestaurantId(restaurantId);
+        menuItemService.deleteMenuItem(itemId, ownerId);
 
-		return new ResponseEntity<List<CategoryMenuDto>>(menu, HttpStatus.OK);
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<MenuItem> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem){
-		
-		MenuItem updateMenuItem = menuItemService.updateMenuItem(id, menuItem);
-		
-		if (updateMenuItem == null) {
-	        return ResponseEntity.notFound().build();
-	    }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-	    return ResponseEntity.ok(updateMenuItem);
-	}
+    @GetMapping("/{restaurantId}/menu")
+    public ResponseEntity<List<CategoryMenuDto>> getMenu(
+            @PathVariable int restaurantId) {
+
+        List<CategoryMenuDto> menu =
+                menuItemService.getMenuByRestaurantId(restaurantId);
+
+        return new ResponseEntity<>(menu, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MenuItemResponseDTO> updateMenuItem(
+            @PathVariable int id,
+            @RequestBody MenuItemRequestDTO request) {
+
+        MenuItemResponseDTO updated =
+                menuItemService.updateMenuItem(id, request);
+
+        return ResponseEntity.ok(updated);
+    }
 }
-
