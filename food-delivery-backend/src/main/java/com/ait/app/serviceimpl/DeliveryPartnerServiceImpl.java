@@ -2,6 +2,9 @@ package com.ait.app.serviceimpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,6 +67,47 @@ public class DeliveryPartnerServiceImpl implements DeliveryPartnerService{
         rDto.setName(savedDp.getName());
         rDto.setAvailable(savedDp.isAvailable());
 		return rDto; 
+	}
+
+	@Override
+	public DeliveryPartnerResponseDto getDeliveryPartner(Long id) {
+		 Optional<DeliveryPartner> optional = dpr.findById(id);
+
+		    if (!optional.isPresent()) {
+		        throw new DeliveryPartnerCustomException(
+		                "Delivery partner not found with ID: " + id,
+		                HttpStatus.NOT_FOUND);
+		    }
+
+		    DeliveryPartner dp = optional.get();
+
+		    DeliveryPartnerResponseDto response = new DeliveryPartnerResponseDto();
+
+		    response.setId(dp.getId());
+		    response.setName(dp.getName());
+		    response.setAvailable(dp.isAvailable());
+
+		    return response;
+	}
+
+	@Override
+	public List<DeliveryPartnerResponseDto> getAllDeliveryPartners() {
+		List<DeliveryPartner> partners = dpr.findAll();
+
+		List<DeliveryPartnerResponseDto> responseList = new ArrayList();
+
+		for (DeliveryPartner dp : partners) {
+
+			DeliveryPartnerResponseDto response = new DeliveryPartnerResponseDto();
+
+			response.setId(dp.getId());
+			response.setName(dp.getName());
+			response.setAvailable(dp.isAvailable());
+
+			responseList.add(response);
+		}
+
+		return responseList;
 	}
 
 }
