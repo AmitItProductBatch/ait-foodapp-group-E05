@@ -15,6 +15,8 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private String orderNumber;
     private Long userId;
     private int restaurantId;
     private String deliveryAddress;
@@ -115,6 +117,16 @@ public class Orders {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	
+	
     
     
 

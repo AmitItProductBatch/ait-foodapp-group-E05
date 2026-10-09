@@ -10,45 +10,52 @@ import com.ait.app.model.Orders;
 
 public interface OrderRepository extends JpaRepository<Orders, Long> {
 
-	Page<Orders> findByUserId(
-            Long userId,
-            Pageable pageable);
+```
+Orders findOrderById(Long id);
 
-    Page<Orders> findByUserIdAndStatus(
-            Long userId,
-            String status,
-            Pageable pageable);
+Page<Orders> findByUserId(
+        Long userId,
+        Pageable pageable);
 
-    Page<Orders> findByUserIdAndCreatedAtBetween(
-            Long userId,
-            LocalDateTime fromDate,
-            LocalDateTime toDate,
-            Pageable pageable);
+Page<Orders> findByUserIdAndStatus(
+        Long userId,
+        String status,
+        Pageable pageable);
 
-    Page<Orders> findByUserIdAndStatusAndCreatedAtBetween(
-            Long userId,
-            String status,
-            LocalDateTime fromDate,
-            LocalDateTime toDate,
-            Pageable pageable);
+Page<Orders> findByUserIdAndCreatedAtBetween(
+        Long userId,
+        LocalDateTime fromDate,
+        LocalDateTime toDate,
+        Pageable pageable);
 
-    Page<Orders> findByUserIdAndCreatedAtGreaterThanEqual(
-            Long userId,
-            LocalDateTime fromDate,
-            Pageable pageable);
+Page<Orders> findByUserIdAndStatusAndCreatedAtBetween(
+        Long userId,
+        String status,
+        LocalDateTime fromDate,
+        LocalDateTime toDate,
+        Pageable pageable);
 
-    Page<Orders> findByUserIdAndCreatedAtLessThanEqual(
-            Long userId,
-            LocalDateTime toDate,
-            Pageable pageable);
-    Page<Orders> findByUserIdAndStatusAndCreatedAtGreaterThanEqual(
-            Long userId,
-            String status,
-            LocalDateTime fromDate,
-            Pageable pageable);
-    Page<Orders> findByUserIdAndStatusAndCreatedAtLessThanEqual(
-            Long userId,
-            String status,
-            LocalDateTime toDate,
-            Pageable pageable);
+Page<Orders> findByUserIdAndCreatedAtGreaterThanEqual(
+        Long userId,
+        LocalDateTime fromDate,
+        Pageable pageable);
+
+Page<Orders> findByUserIdAndCreatedAtLessThanEqual(
+        Long userId,
+        LocalDateTime toDate,
+        Pageable pageable);
+
+Page<Orders> findByUserIdAndStatusAndCreatedAtGreaterThanEqual(
+        Long userId,
+        String status,
+        LocalDateTime fromDate,
+        Pageable pageable);
+
+Page<Orders> findByUserIdAndStatusAndCreatedAtLessThanEqual(
+        Long userId,
+        String status,
+        LocalDateTime toDate,
+        Pageable pageable);
+```
+
 }
