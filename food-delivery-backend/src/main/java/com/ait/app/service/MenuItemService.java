@@ -17,7 +17,7 @@ public interface MenuItemService {
 	
 	void deleteMenuItem(int itemId, Long ownerId);
 	
-    MenuItem updateMenuItem(int id, MenuItem menuItem);
+    MenuItemResponseDTO updateMenuItem(int id, MenuItemRequestDTO request);
 
 	
 }

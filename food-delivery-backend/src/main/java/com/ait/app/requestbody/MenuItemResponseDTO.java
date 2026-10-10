@@ -7,6 +7,7 @@ public class MenuItemResponseDTO {
 	private String description;
 	private Double price;
 	private Boolean availability;
+	private int categoryId;
 	private String category;
 	private String image;
 
@@ -50,14 +51,6 @@ public class MenuItemResponseDTO {
 		this.availability = availability;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	public String getImage() {
 		return image;
 	}
@@ -65,5 +58,25 @@ public class MenuItemResponseDTO {
 	public void setImage(String image) {
 		this.image = image;
 	}
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	
+	
+	
 
 }

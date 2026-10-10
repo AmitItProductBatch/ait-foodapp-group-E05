@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,10 @@ import com.ait.app.exception.MenuItemAlreadyExsistsException;
 import com.ait.app.exception.RestaurantCustomException;
 import com.ait.app.exception.MenuItemNotFoundException;
 import com.ait.app.exception.MenuItemOwnershipException;
+import com.ait.app.model.Category;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.Restaurant;
+import com.ait.app.repository.CategoryRepo;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.RestaurantRepository;
 import com.ait.app.requestbody.CategoryMenuDto;
@@ -27,143 +28,209 @@ import com.ait.app.service.MenuItemService;
 @Service
 public class MenuItemServiceImpl implements MenuItemService {
 
-	@Autowired
-	RestaurantRepository restaurantRepository;
 
-	@Autowired
-	MenuItemRepository menuItemRepository;
+@Autowired
+RestaurantRepository restaurantRepository;
 
-	@Override
-	public MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request) {
+@Autowired
+MenuItemRepository menuItemRepository;
 
-		Optional<Restaurant> restaurantOptional = restaurantRepository.findById(request.getRestaurantId());
-		
-		if (!restaurantOptional.isPresent()) {
-			throw new RestaurantCustomException("Restaurant not found with id: ", HttpStatus.NOT_FOUND);
-		}
-		Restaurant restaurant = restaurantOptional.get();
-		
-		if (menuItemRepository.existsByRestaurantIdAndName(request.getRestaurantId(), request.getName())) {
-			throw new MenuItemAlreadyExsistsException("Menu item already exists for this restaurants");
-		}
+@Autowired
+private CategoryRepo categoryRepo;
 
-		MenuItem menuItem = new MenuItem();
-		menuItem.setName(request.getName());
-		menuItem.setDescription(request.getDescription());
-		menuItem.setPrice(request.getPrice());
-		menuItem.setAvailability(request.getAvailability());
-		menuItem.setCategory(request.getCategory());
+@Override
+public MenuItemResponseDTO addMenuItem(MenuItemRequestDTO request) {
 
-		menuItem.setRestaurant(restaurant);
+    Optional<Restaurant> restaurantOptional =
+            restaurantRepository.findById(request.getRestaurantId());
 
-		MenuItem savedMenuItem = menuItemRepository.save(menuItem);
+    if (!restaurantOptional.isPresent()) {
+        throw new RestaurantCustomException(
+                "Restaurant not found with id: " + request.getRestaurantId(),
+                HttpStatus.NOT_FOUND);
+    }
 
-		MenuItemResponseDTO response = new MenuItemResponseDTO();
+    Restaurant restaurant = restaurantOptional.get();
 
-		response.setId(savedMenuItem.getId());
-		response.setName(savedMenuItem.getName());
-		response.setDescription(savedMenuItem.getDescription());
-		response.setPrice(savedMenuItem.getPrice());
-		response.setAvailability(savedMenuItem.getAvailability());
-		response.setCategory(savedMenuItem.getCategory());
+    if (menuItemRepository.existsByRestaurantIdAndName(
+            request.getRestaurantId(), request.getName())) {
+        throw new MenuItemAlreadyExsistsException(
+                "Menu item already exists for this restaurant");
+    }
 
-		return response;
-		
-		
-	}
-	
-	@Override
-	public void deleteMenuItem(int itemId, Long ownerId) {
+    Optional<Category> categoryOptional =
+            categoryRepo.findById(request.getCategoryId());
 
-	    Optional<MenuItem> optionalMenuItem = menuItemRepository.findById(itemId);
+    if (!categoryOptional.isPresent()) {
+        throw new IllegalArgumentException(
+                "Category not found with id: " + request.getCategoryId());
+    }
 
-	    if (optionalMenuItem.isEmpty()) {
-	        throw new MenuItemNotFoundException("Menu item not found");
+    Category category = categoryOptional.get();
+
+    if (!category.isActive()) {
+        throw new IllegalArgumentException("Category is inactive");
+    }
+
+    MenuItem menuItem = new MenuItem();
+    menuItem.setName(request.getName());
+    menuItem.setDescription(request.getDescription());
+    menuItem.setPrice(request.getPrice());
+    menuItem.setAvailability(request.getAvailability());
+    menuItem.setCategory(category);
+    menuItem.setRestaurant(restaurant);
+
+    MenuItem savedMenuItem = menuItemRepository.save(menuItem);
+
+    MenuItemResponseDTO response = new MenuItemResponseDTO();
+    response.setId(savedMenuItem.getId());
+    response.setName(savedMenuItem.getName());
+    response.setDescription(savedMenuItem.getDescription());
+    response.setPrice(savedMenuItem.getPrice());
+    response.setAvailability(savedMenuItem.getAvailability());
+    response.setCategoryId(savedMenuItem.getCategory().getId());
+    response.setCategory(savedMenuItem.getCategory().getCategoryName());
+
+    return response;
+}
+
+@Override
+public void deleteMenuItem(int itemId, Long ownerId) {
+
+    Optional<MenuItem> optionalMenuItem =
+            menuItemRepository.findById(itemId);
+
+    if (optionalMenuItem.isEmpty()) {
+        throw new MenuItemNotFoundException("Menu item not found");
+    }
+
+    MenuItem menuItem = optionalMenuItem.get();
+    Restaurant restaurant = menuItem.getRestaurant();
+
+    if (restaurant.getOwner() == null) {
+        throw new MenuItemOwnershipException("Restaurant has no owner");
+    }
+
+    if (!restaurant.getOwner().getId().equals(ownerId)) {
+        throw new MenuItemOwnershipException(
+                "You are not the owner of this restaurant");
+    }
+
+    menuItemRepository.delete(menuItem);
+}
+
+@Override
+public List<CategoryMenuDto> getMenuByRestaurantId(int restaurantId) {
+
+	 Optional<Restaurant> restaurantOptional =
+	            restaurantRepository.findByIdAndActiveTrue(restaurantId);
+
+	    if (restaurantOptional.isEmpty()) {
+	        throw new RestaurantCustomException(
+	                "Restaurant not found or inactive",
+	                HttpStatus.NOT_FOUND);
 	    }
 
-	    MenuItem menuItem = optionalMenuItem.get();
+	    List<MenuItem> menuItems =
+	            menuItemRepository.findByRestaurantIdAndAvailabilityTrue(restaurantId);
 
-	    Restaurant restaurant = menuItem.getRestaurant();
+	    Map<String, List<MenuItemResponseDTO>> groupedItems =
+	            new LinkedHashMap<String, List<MenuItemResponseDTO>>();
 
-	    if (restaurant.getOwner() == null) {
-	        throw new MenuItemOwnershipException("Restaurant has no owner");
+	    for (int i = 0; i < menuItems.size(); i++) {
+
+	        MenuItem menuItem = menuItems.get(i);
+
+	        MenuItemResponseDTO itemDto = new MenuItemResponseDTO();
+
+	        itemDto.setId(menuItem.getId());
+	        itemDto.setName(menuItem.getName());
+	        itemDto.setDescription(menuItem.getDescription());
+	        itemDto.setPrice(menuItem.getPrice());
+	        itemDto.setImage(menuItem.getImage());
+	        itemDto.setAvailability(menuItem.getAvailability());
+
+	        Category menuCategory = menuItem.getCategory();
+
+	        if (menuCategory == null) {
+	            continue;
+	        }
+
+	        itemDto.setCategoryId(menuCategory.getId());
+	        itemDto.setCategory(menuCategory.getCategoryName());
+
+	        String category = menuCategory.getCategoryName();
+
+	        List<MenuItemResponseDTO> itemsInCategory =
+	                groupedItems.get(category);
+
+	        if (itemsInCategory == null) {
+	            itemsInCategory = new ArrayList<MenuItemResponseDTO>();
+	            groupedItems.put(category, itemsInCategory);
+	        }
+
+	        itemsInCategory.add(itemDto);
 	    }
 
-	    if (!restaurant.getOwner().getId().equals(ownerId)) {
-	        throw new MenuItemOwnershipException(
-	                "You are not the owner of this restaurant");
+	    List<CategoryMenuDto> response =
+	            new ArrayList<CategoryMenuDto>();
+
+	    for (Map.Entry<String, List<MenuItemResponseDTO>> entry
+	            : groupedItems.entrySet()) {
+
+	        CategoryMenuDto categoryMenuDto = new CategoryMenuDto();
+
+	        categoryMenuDto.setCategory(entry.getKey());
+	        categoryMenuDto.setItems(entry.getValue());
+
+	        response.add(categoryMenuDto);
 	    }
 
-	    menuItemRepository.delete(menuItem);
+	    return response;
 	}
+@Override
+public MenuItemResponseDTO updateMenuItem(int id, MenuItemRequestDTO request) {
 
-	@Override
-	public List<CategoryMenuDto> getMenuByRestaurantId(int restaurantId) {
+    Optional<MenuItem> menuItemOptional = menuItemRepository.findById(id);
 
-		Optional<Restaurant> restaurantOptional = restaurantRepository.findByIdAndActiveTrue(restaurantId);
+    if (!menuItemOptional.isPresent()) {
+        throw new MenuItemNotFoundException("Menu item not found with id: " + id);
+    }
 
-		if (restaurantOptional.isEmpty()) {
-			throw new RestaurantCustomException("Restaurant not found or inactive", HttpStatus.NOT_FOUND);
-		}
+    Optional<Category> categoryOptional =
+            categoryRepo.findById(request.getCategoryId());
 
-		List<MenuItem> menuItems = menuItemRepository.findByRestaurantIdAndAvailabilityTrue(restaurantId);
+    if (!categoryOptional.isPresent()) {
+        throw new IllegalArgumentException(
+                "Category not found with id: " + request.getCategoryId());
+    }
 
-		Map<String, List<MenuItemResponseDTO>> groupedItems = new LinkedHashMap<String, List<MenuItemResponseDTO>>();
+    Category category = categoryOptional.get();
 
-		for (int i = 0; i < menuItems.size(); i++) {
+    if (!category.isActive()) {
+        throw new IllegalArgumentException("Category is inactive");
+    }
 
-			MenuItem menuItem = menuItems.get(i);
+    MenuItem menuItem = menuItemOptional.get();
+    menuItem.setName(request.getName());
+    menuItem.setDescription(request.getDescription());
+    menuItem.setPrice(request.getPrice());
+    menuItem.setAvailability(request.getAvailability());
+    menuItem.setCategory(category);
 
-			MenuItemResponseDTO itemDto = new MenuItemResponseDTO();
-			itemDto.setId(menuItem.getId());
-			itemDto.setName(menuItem.getName());
-			itemDto.setDescription(menuItem.getDescription());
-			itemDto.setPrice(menuItem.getPrice());
-			itemDto.setImage(menuItem.getImage());
+    MenuItem updatedMenuItem = menuItemRepository.save(menuItem);
 
-			String category = menuItem.getCategory();
+    MenuItemResponseDTO response = new MenuItemResponseDTO();
+    response.setId(updatedMenuItem.getId());
+    response.setName(updatedMenuItem.getName());
+    response.setDescription(updatedMenuItem.getDescription());
+    response.setPrice(updatedMenuItem.getPrice());
+    response.setAvailability(updatedMenuItem.getAvailability());
+    response.setCategoryId(updatedMenuItem.getCategory().getId());
+    response.setCategory(updatedMenuItem.getCategory().getCategoryName());
 
-			List<MenuItemResponseDTO> itemsInCategory = groupedItems.get(category);
+    return response;
+}
 
-			if (itemsInCategory == null) {
-				itemsInCategory = new ArrayList<MenuItemResponseDTO>();
-				groupedItems.put(category, itemsInCategory);
-			}
-
-			itemsInCategory.add(itemDto);
-		}
-
-		List<CategoryMenuDto> response = new ArrayList<CategoryMenuDto>();
-
-		for (Map.Entry<String, List<MenuItemResponseDTO>> entry : groupedItems.entrySet()) {
-			CategoryMenuDto categoryMenuDto = new CategoryMenuDto();
-			categoryMenuDto.setCategory(entry.getKey());
-			categoryMenuDto.setItems(entry.getValue());
-			response.add(categoryMenuDto);
-		}
-
-		return response;
-	}
-
-	@Override
-	public MenuItem updateMenuItem(int id, MenuItem menuItem) {
-		  MenuItem existingItem = menuItemRepository.findById(id).orElse(null);
-
-		    if (existingItem == null) {
-		        return null;
-		    }
-
-		    existingItem.setName(menuItem.getName());
-		    existingItem.setDescription(menuItem.getDescription());
-		    existingItem.setPrice(menuItem.getPrice());
-		    existingItem.setAvailability(menuItem.getAvailability());
-		    existingItem.setCategory(menuItem.getCategory());
-
-		    return menuItemRepository.save(existingItem);
-	}
 
 }
-	
-	
-	
-

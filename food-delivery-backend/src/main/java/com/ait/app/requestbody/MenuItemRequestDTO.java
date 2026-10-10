@@ -6,7 +6,7 @@ public class MenuItemRequestDTO {
 	private String description;
 	private Double price;
 	private Boolean availability;
-	private String category;
+	private int categoryId;
 	private int restaurantId;
 
 	public int getRestaurantId() {
@@ -49,12 +49,13 @@ public class MenuItemRequestDTO {
 		this.availability = availability;
 	}
 
-	public String getCategory() {
-		return category;
+	public int getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
+	
 }
