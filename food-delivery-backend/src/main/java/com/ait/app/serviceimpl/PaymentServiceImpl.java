@@ -1,11 +1,14 @@
 package com.ait.app.serviceimpl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.ait.app.exception.OrderServiceCustomException;
 import com.ait.app.model.Orders;
 import com.ait.app.model.Payment;
 import com.ait.app.repository.OrderRepository;
@@ -100,4 +103,29 @@ public class PaymentServiceImpl implements PaymentService {
                     + e.getMessage());
         }
     }
+
+	@Override
+	public PaymentOrderResponseDto getPaymentByOrderId(Long orderId) {
+        if (orderId == null) {
+            throw new OrderServiceCustomException("Order ID cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        
+        Optional<Payment> o = paymentRepo.findByOrderId(orderId);
+        if (!o.isPresent()) {
+            throw new OrderServiceCustomException("Payment details not found for Order ID: " + orderId, HttpStatus.NOT_FOUND);
+        }
+        Payment p = o.get();
+        
+        PaymentOrderResponseDto response = new PaymentOrderResponseDto();
+        response.setOrderId(p.getOrderId());
+        response.setRazorpayOrderId(p.getRazorpayOrderId());
+        response.setAmount(p.getAmount());
+        response.setCurrency(p.getCurrency());
+        response.setStatus(p.getStatus());
+        response.setPaymentMethod(p.getPaymentMethod());
+        response.setPaymentDate(p.getPaymentDate());
+
+        return response;
+		
+	}
 }
