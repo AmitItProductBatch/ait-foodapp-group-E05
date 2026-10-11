@@ -10,7 +10,7 @@ import com.ait.app.model.Orders;
 
 public interface OrderRepository extends JpaRepository<Orders, Long> {
 
-```
+
 Orders findOrderById(Long id);
 
 Page<Orders> findByUserId(
@@ -56,6 +56,6 @@ Page<Orders> findByUserIdAndStatusAndCreatedAtLessThanEqual(
         String status,
         LocalDateTime toDate,
         Pageable pageable);
-```
+
 
 }
