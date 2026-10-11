@@ -80,12 +80,24 @@ public class OrderServiceImpl implements OrderService{
         
         List<OrderItem> orderItemsList = new ArrayList<>();
         for(CartItem ci : c.getCartItems()) {
+            Optional<MenuItem> optionalMenu = mir.findById(ci.getMenuItemId());
+            if (!optionalMenu.isPresent()) {
+                throw new OrderServiceCustomException("Food item not found in menu registry", HttpStatus.NOT_FOUND);
+            }
+            MenuItem liveMenu = optionalMenu.get();
+            if (ci.getQuantity() < 1) {
+                throw new OrderServiceCustomException("Validation Failed: Quantity must be 1 or more", HttpStatus.BAD_REQUEST);
+            }
+            if (liveMenu.getPrice() < 0) {
+                throw new OrderServiceCustomException("Validation Failed: Price snapshot cannot be negative", HttpStatus.BAD_REQUEST);
+            }
         	OrderItem orderItem = new OrderItem();
         	orderItem.setOrders(order);
         	orderItem.setMenuItemId(ci.getMenuItemId());
         	orderItem.setQuantity(ci.getQuantity());
-        	orderItem.setSubtotal(ci.getSubtotal());
-        	orderItem.setUnitPrice(ci.getUnitPrice());
+        orderItem.setItemNameSnapshot(liveMenu.getName());
+        	orderItem.setSubtotal(ci.getQuantity() * liveMenu.getPrice());
+        	orderItem.setUnitPrice(liveMenu.getPrice());
         	
         	orderItemsList.add(orderItem);
         }
