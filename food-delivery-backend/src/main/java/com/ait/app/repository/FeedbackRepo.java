@@ -1,5 +1,7 @@
 package com.ait.app.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ait.app.model.Feedback;
@@ -8,6 +10,7 @@ public interface FeedbackRepo extends JpaRepository<Feedback, Integer> {
 	
 	boolean existsByUser_IdAndOrderId(Long userId, int orderId);
 	
-	
+	 Page<Feedback> findByRestaurantIdAndPublishedTrueAndDeletedFalseAndFlaggedFalse(
+	            int restaurantId, Pageable pageable);
 
 }
