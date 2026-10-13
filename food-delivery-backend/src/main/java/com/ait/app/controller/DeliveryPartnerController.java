@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.requestbody.DeliveryPartnerRequestDto;
 import com.ait.app.requestbody.DeliveryPartnerResponseDto;
+import com.ait.app.requestbody.DeliveryPartnerUpdateRequestDto;
 import com.ait.app.service.DeliveryPartnerService;
 
 @RestController
@@ -28,8 +30,7 @@ public class DeliveryPartnerController {
 		DeliveryPartnerResponseDto dpr = dps.createDeliveryPartner(dto);
 		return new ResponseEntity(dpr, HttpStatus.CREATED);
 	}
-	
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<DeliveryPartnerResponseDto> getDeliveryPartner(@PathVariable Long id) {
 		DeliveryPartnerResponseDto partner = dps.getDeliveryPartner(id);
@@ -39,11 +40,19 @@ public class DeliveryPartnerController {
 
 	@GetMapping
 	public ResponseEntity<List<DeliveryPartnerResponseDto>> getAllDeliveryPartners() {
-        List<DeliveryPartnerResponseDto> partners = dps.getAllDeliveryPartners();
+		List<DeliveryPartnerResponseDto> partners = dps.getAllDeliveryPartners();
 
 		return ResponseEntity.ok(partners);
 	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<DeliveryPartnerResponseDto> updateDeliveryPartner(@PathVariable Long id, @RequestBody DeliveryPartnerUpdateRequestDto dto) {
+
+		DeliveryPartnerResponseDto response = dps.updateDeliveryPartner(id, dto);
+
+		return ResponseEntity.ok(response);
+	}
+
 
 	
-
 }

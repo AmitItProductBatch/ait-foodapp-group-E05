@@ -15,6 +15,7 @@ import com.ait.app.model.DeliveryPartner;
 import com.ait.app.repository.DeliveryPartnerRepository;
 import com.ait.app.requestbody.DeliveryPartnerRequestDto;
 import com.ait.app.requestbody.DeliveryPartnerResponseDto;
+import com.ait.app.requestbody.DeliveryPartnerUpdateRequestDto;
 import com.ait.app.service.DeliveryPartnerService;
 
 @Service
@@ -108,6 +109,35 @@ public class DeliveryPartnerServiceImpl implements DeliveryPartnerService{
 		}
 
 		return responseList;
+	}
+
+	@Override
+	public DeliveryPartnerResponseDto updateDeliveryPartner(Long id, DeliveryPartnerUpdateRequestDto dto) {
+
+		Optional<DeliveryPartner> optional = dpr.findById(id);
+
+		if (!optional.isPresent()) {
+			throw new DeliveryPartnerCustomException("Delivery partner not found with ID: " + id, HttpStatus.NOT_FOUND);
+		}
+
+		DeliveryPartner dp = optional.get();
+
+		dp.setName(dto.getName());
+		dp.setPhNo(dto.getPhNo());
+		dp.setEmail(dto.getEmail());
+		dp.setVehicleType(dto.getVehicleType());
+		dp.setVehicleNumber(dto.getVehicleNumber());
+		dp.setAvailable(dto.isAvailable());
+
+		DeliveryPartner updatedPartner = dpr.save(dp);
+
+		DeliveryPartnerResponseDto response = new DeliveryPartnerResponseDto();
+
+		response.setId(updatedPartner.getId());
+		response.setName(updatedPartner.getName());
+		response.setAvailable(updatedPartner.isAvailable());
+
+		return response;
 	}
 
 }
