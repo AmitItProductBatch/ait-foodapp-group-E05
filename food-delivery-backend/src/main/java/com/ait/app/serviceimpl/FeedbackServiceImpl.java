@@ -3,6 +3,7 @@ package com.ait.app.serviceimpl;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.FeedbackCustomException;
@@ -12,6 +13,7 @@ import com.ait.app.repository.FeedbackRepo;
 import com.ait.app.repository.UserRepository;
 import com.ait.app.requestbody.FeedbackRequestDto;
 import com.ait.app.requestbody.FeedbackResponseDto;
+import com.ait.app.requestbody.FeedbackUpdateDto;
 import com.ait.app.service.FeedbackService;
 
 @Service
@@ -121,7 +123,62 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return response;
 		
 	}
+	
+	@Override
+	public FeedbackResponseDto updateFeedback(
+	        int feedbackId,
+	        FeedbackUpdateDto dto) {
 
+	    Feedback feedback = feedbackRepo.findById(feedbackId)
+	            .orElseThrow(() ->
+	                    new FeedbackCustomException("Feedback not found"));
+
+	    if (feedback.getUser() == null ||
+	            !feedback.getUser().getId().equals(dto.getUserId())) {
+
+	        throw new FeedbackCustomException(
+	                "You are not authorized to edit this feedback",
+	                HttpStatus.FORBIDDEN);
+	    }
+
+	    if (dto.getRating() != null) {
+
+	        if (dto.getRating() < 1 || dto.getRating() > 5) {
+	            throw new FeedbackCustomException(
+	                    "Rating must be between 1 and 5");
+	        }
+
+	        feedback.setRating(dto.getRating());
+	    }
+
+	    if (dto.getComment() != null) {
+
+	        if (dto.getComment().trim().isEmpty()) {
+	            throw new FeedbackCustomException(
+	                    "Comment cannot be empty");
+	        }
+
+	        feedback.setComment(dto.getComment());
+	    }
+
+	    feedback.setUpdatedAt(LocalDateTime.now());
+
+	    Feedback updatedFeedback = feedbackRepo.save(feedback);
+
+	    FeedbackResponseDto response = new FeedbackResponseDto();
+
+	    response.setId(updatedFeedback.getId());
+	    response.setUserId(updatedFeedback.getUser().getId());
+	    response.setRestaurantId(updatedFeedback.getRestaurantId());
+	    response.setOrderId(updatedFeedback.getOrderId());
+	    response.setRating(updatedFeedback.getRating());
+	    response.setComment(updatedFeedback.getComment());
+	    response.setCreatedAt(updatedFeedback.getCreatedAt());
+	    response.setUpdatedAt(updatedFeedback.getUpdatedAt());
+
+	    return response;
+	}
+	
 	@Override
 	public void deleteFeedback(int id) {
 		

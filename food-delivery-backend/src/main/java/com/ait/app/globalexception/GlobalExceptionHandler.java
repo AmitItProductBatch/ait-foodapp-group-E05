@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(
                 ex.getMessage(),
-                org.springframework.http.HttpStatus.BAD_REQUEST);
+                ex.getStatus());
     }
 
     @ExceptionHandler(AddressCustomException.class)

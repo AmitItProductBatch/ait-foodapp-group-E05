@@ -21,6 +21,7 @@ public class OrderItem {
     private int quantity;
     private Double unitPrice;
     private Double subtotal;
+    private String itemNameSnapshot; 
     
 	public Long getId() {
 		return id;
@@ -58,6 +59,12 @@ public class OrderItem {
 	}
 	public void setSubtotal(Double subtotal) {
 		this.subtotal = subtotal;
+	}
+	public String getItemNameSnapshot() {
+		return itemNameSnapshot;
+	}
+	public void setItemNameSnapshot(String itemNameSnapshot) {
+		this.itemNameSnapshot = itemNameSnapshot;
 	}
     
     
