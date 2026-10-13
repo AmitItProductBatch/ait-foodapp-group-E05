@@ -7,4 +7,5 @@ public interface DeliveryPartnerService {
 	
 	DeliveryPartnerResponseDto createDeliveryPartner(DeliveryPartnerRequestDto dto);
 
+	void deleteDeliveryPartner(Long id);
 }

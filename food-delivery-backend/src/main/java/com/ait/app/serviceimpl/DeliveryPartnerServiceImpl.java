@@ -65,5 +65,18 @@ public class DeliveryPartnerServiceImpl implements DeliveryPartnerService{
         rDto.setAvailable(savedDp.isAvailable());
 		return rDto; 
 	}
+	
+	@Override
+	public void deleteDeliveryPartner(Long id) {
+
+	    if (!dpr.existsById(id)) {
+	        throw new DeliveryPartnerCustomException(
+	                "Delivery Partner not found with id: " + id,
+	                HttpStatus.NOT_FOUND
+	        );
+	    }
+
+	    dpr.deleteById(id);
+	}
 
 }
