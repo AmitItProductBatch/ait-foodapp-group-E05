@@ -10,10 +10,13 @@ public interface DeliveryPartnerService {
 
 	DeliveryPartnerResponseDto createDeliveryPartner(DeliveryPartnerRequestDto dto);
 
+
 	DeliveryPartnerResponseDto getDeliveryPartner(Long id);
 
 	List<DeliveryPartnerResponseDto> getAllDeliveryPartners();
 
 	DeliveryPartnerResponseDto updateDeliveryPartner(Long id, DeliveryPartnerUpdateRequestDto dto);
 
+
+	void deleteDeliveryPartner(Long id);
 }

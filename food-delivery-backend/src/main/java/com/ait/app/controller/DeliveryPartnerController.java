@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +33,17 @@ public class DeliveryPartnerController {
 	public ResponseEntity registerDeliveryPartner(@RequestBody DeliveryPartnerRequestDto dto) {
 		DeliveryPartnerResponseDto dpr = dps.createDeliveryPartner(dto);
 		return new ResponseEntity(dpr, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteDeliveryPartner(@PathVariable Long id) {
+		
+		dps.deleteDeliveryPartner(id);
+		
+		return new ResponseEntity<>(
+				"Delivery Partner deleted successfully",
+				HttpStatus.OK
+		);
 	}
 
 	@GetMapping("/{id}")
