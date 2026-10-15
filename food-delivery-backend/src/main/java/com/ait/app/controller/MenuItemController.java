@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ait.app.model.MenuItem;
 import com.ait.app.requestbody.CategoryMenuDto;
 import com.ait.app.requestbody.MenuItemRequestDTO;
 import com.ait.app.requestbody.MenuItemResponseDTO;
@@ -59,13 +60,17 @@ public class MenuItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItemResponseDTO> updateMenuItem(
+    public ResponseEntity<MenuItem> updateMenuItem(
             @PathVariable int id,
-            @RequestBody MenuItemRequestDTO request) {
+            @RequestBody MenuItem menuItem) {
 
-        MenuItemResponseDTO updated =
-                menuItemService.updateMenuItem(id, request);
+        MenuItem updatedMenuItem =
+                menuItemService.updateMenuItem(id, menuItem);
 
-        return ResponseEntity.ok(updated);
+        if (updatedMenuItem == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedMenuItem);
     }
 }

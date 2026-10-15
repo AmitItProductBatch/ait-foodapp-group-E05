@@ -29,8 +29,36 @@ public class Feedback {
     private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    
+    private boolean published;
+    private boolean deleted;
+    private boolean flagged;
 
-    public int getId() {
+    public boolean isPublished() {
+		return published;
+	}
+
+	public void setPublished(boolean published) {
+		this.published = published;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
+	}
+
+	public int getId() {
         return id;
     }
 

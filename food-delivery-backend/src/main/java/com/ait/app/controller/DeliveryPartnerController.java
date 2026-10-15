@@ -1,28 +1,73 @@
 package com.ait.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ait.app.requestbody.DeliveryPartnerRequestDto;
 import com.ait.app.requestbody.DeliveryPartnerResponseDto;
+import com.ait.app.requestbody.DeliveryPartnerUpdateRequestDto;
 import com.ait.app.service.DeliveryPartnerService;
 
 @RestController
 @RequestMapping("/api/delivery-partners")
 public class DeliveryPartnerController {
-	
+
 	@Autowired
 	DeliveryPartnerService dps;
-	
+
 	@PostMapping
 	public ResponseEntity registerDeliveryPartner(@RequestBody DeliveryPartnerRequestDto dto) {
 		DeliveryPartnerResponseDto dpr = dps.createDeliveryPartner(dto);
 		return new ResponseEntity(dpr, HttpStatus.CREATED);
 	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteDeliveryPartner(@PathVariable Long id) {
+		
+		dps.deleteDeliveryPartner(id);
+		
+		return new ResponseEntity<>(
+				"Delivery Partner deleted successfully",
+				HttpStatus.OK
+		);
+	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<DeliveryPartnerResponseDto> getDeliveryPartner(@PathVariable Long id) {
+		DeliveryPartnerResponseDto partner = dps.getDeliveryPartner(id);
+
+		return ResponseEntity.ok(partner);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<DeliveryPartnerResponseDto>> getAllDeliveryPartners() {
+		List<DeliveryPartnerResponseDto> partners = dps.getAllDeliveryPartners();
+
+		return ResponseEntity.ok(partners);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<DeliveryPartnerResponseDto> updateDeliveryPartner(@PathVariable Long id, @RequestBody DeliveryPartnerUpdateRequestDto dto) {
+
+		DeliveryPartnerResponseDto response = dps.updateDeliveryPartner(id, dto);
+
+		return ResponseEntity.ok(response);
+	}
+
+
+	
 }
