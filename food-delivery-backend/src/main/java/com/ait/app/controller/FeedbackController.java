@@ -4,13 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ait.app.requestbody.FeedbackPageResponseDto;
 import com.ait.app.requestbody.FeedbackRequestDto;
 import com.ait.app.requestbody.FeedbackResponseDto;
 import com.ait.app.requestbody.FeedbackUpdateDto;
@@ -19,49 +22,49 @@ import com.ait.app.service.FeedbackService;
 @RestController
 @RequestMapping("/api/feedback")
 public class FeedbackController {
-	
+
 	@Autowired
 	private FeedbackService feedbackService;
-	
+
 	@PostMapping
-	public ResponseEntity<FeedbackResponseDto> createFeedback(
-			@RequestBody FeedbackRequestDto dto) {
-		
-		FeedbackResponseDto response =
-				feedbackService.createFeedback(dto);
-		
+	public ResponseEntity<FeedbackResponseDto> createFeedback(@RequestBody FeedbackRequestDto dto) {
+
+		FeedbackResponseDto response = feedbackService.createFeedback(dto);
+
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/submit")
-	public ResponseEntity<FeedbackResponseDto> submitFeedback(
-			@RequestBody FeedbackRequestDto dto) {
+	public ResponseEntity<FeedbackResponseDto> submitFeedback(@RequestBody FeedbackRequestDto dto) {
 
-		FeedbackResponseDto response =
-				feedbackService.submitFeedback(dto);
+		FeedbackResponseDto response = feedbackService.submitFeedback(dto);
 
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
-	
+
 	@PatchMapping("/{feedbackId}")
-	public ResponseEntity<FeedbackResponseDto> updateFeedback(
-	        @PathVariable int feedbackId,
-	        @RequestBody FeedbackUpdateDto dto) {
+	public ResponseEntity<FeedbackResponseDto> updateFeedback(@PathVariable int feedbackId,
+			@RequestBody FeedbackUpdateDto dto) {
 
-	    FeedbackResponseDto response =
-	            feedbackService.updateFeedback(feedbackId, dto);
+		FeedbackResponseDto response = feedbackService.updateFeedback(feedbackId, dto);
 
-	    return ResponseEntity.ok(response);
+		return ResponseEntity.ok(response);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteFeedback(@PathVariable int id){
-	
-	
-	feedbackService.deleteFeedback(id);
-	
-	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	
+	public ResponseEntity<Void> deleteFeedback(@PathVariable int id) {
+
+		feedbackService.deleteFeedback(id);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@GetMapping("/{restaurantId}")
+	public ResponseEntity<FeedbackPageResponseDto> getRestaurantFeedback(@PathVariable int restaurantId,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+		FeedbackPageResponseDto response = feedbackService.getRestaurantFeedback(restaurantId, page, size);
+
+		return ResponseEntity.ok(response);
+	}
 }
