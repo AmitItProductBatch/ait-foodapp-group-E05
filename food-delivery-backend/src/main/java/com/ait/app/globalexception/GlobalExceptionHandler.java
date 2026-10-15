@@ -11,10 +11,11 @@ import com.ait.app.exception.DeliveryPartnerCustomException;
 import com.ait.app.exception.AddressCustomException;
 import com.ait.app.exception.FeedbackCustomException;
 import com.ait.app.exception.OrderServiceCustomException;
+import com.ait.app.exception.PaymentServiceCustomException;
 import com.ait.app.exception.UserServiceCustomException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler {  
 
     @ExceptionHandler(UserServiceCustomException.class)
     public ResponseEntity<String> UserExceptionHandler(UserServiceCustomException e) {
@@ -56,6 +57,11 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(DeliveryPartnerCustomException.class)
     public ResponseEntity<String> DeliveryPartnerCustomExceptionHandler(DeliveryPartnerCustomException e) {
+        return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+    }
+    
+    @ExceptionHandler(PaymentServiceCustomException.class)
+    public ResponseEntity<String> PaymentServiceExceptionHandler(PaymentServiceCustomException e) {
         return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
     

@@ -6,5 +6,6 @@ import com.ait.app.requestbody.PaymentOrderResponseDto;
 public interface PaymentService {
 	
 	PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto dto);
+	PaymentOrderResponseDto getPaymentByOrderId(Long orderId);
 
 }
