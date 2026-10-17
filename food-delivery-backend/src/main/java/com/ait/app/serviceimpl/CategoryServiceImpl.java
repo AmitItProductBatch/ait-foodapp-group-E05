@@ -1,9 +1,13 @@
 package com.ait.app.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ait.app.exception.CategoryAlreadyExistsException;
+import com.ait.app.exception.CategoryNotFoundException;
 import com.ait.app.model.Category;
 import com.ait.app.repository.CategoryRepo;
 import com.ait.app.requestbody.CategoryRequestDto;
@@ -50,4 +54,71 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		return response;
 
-}}
+}
+
+
+	@Override
+	public CategoryResponseDto getCategory(int id) {
+		
+		 Category category = categoryRepo.findById(id).orElse(null);
+
+		    if (category == null) {
+		        throw new CategoryNotFoundException(
+		                "Category not found with ID: " + id);
+		    }
+
+		    CategoryResponseDto response = new CategoryResponseDto();
+
+		    response.setId(category.getId());
+		    response.setCategoryName(category.getCategoryName());
+		    response.setDescription(category.getDescription());
+		    response.setActive(category.isActive());
+
+		    return response;
+	}
+
+
+	@Override
+	public List<CategoryResponseDto> getAllcategories() {
+		
+		 List<Category> categories = categoryRepo.findAll();
+
+		    List<CategoryResponseDto> responseList = new ArrayList<>();
+
+		    for (Category category : categories) {
+
+		        CategoryResponseDto response = new CategoryResponseDto();
+
+		        response.setId(category.getId());
+		        response.setCategoryName(category.getCategoryName());
+		        response.setDescription(category.getDescription());
+		        response.setActive(category.isActive());
+
+		        responseList.add(response);
+		    }
+
+		    return responseList;
+	}
+
+
+	@Override
+	public List<CategoryResponseDto> getActiveCatgeories() {
+		
+		 List<Category> categories = categoryRepo.findByActiveTrue();
+
+		    List<CategoryResponseDto> responseList = new ArrayList<>();
+
+		    for (Category category : categories) {
+
+		        CategoryResponseDto response = new CategoryResponseDto();
+
+		        response.setId(category.getId());
+		        response.setCategoryName(category.getCategoryName());
+		        response.setDescription(category.getDescription());
+		        response.setActive(category.isActive());
+
+		        responseList.add(response);
+		    }
+
+		    return responseList;
+	}}
