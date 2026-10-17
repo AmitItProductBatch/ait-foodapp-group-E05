@@ -67,7 +67,7 @@ public class Payment {
 		return PaymentDate;
 	}
 	public void setPaymentDate(LocalDateTime paymentDate) {
-		PaymentDate = paymentDate;
+		this.PaymentDate = paymentDate;
 	}
 	
 }

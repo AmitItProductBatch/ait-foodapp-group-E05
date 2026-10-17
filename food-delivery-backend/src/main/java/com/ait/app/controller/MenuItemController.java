@@ -60,16 +60,13 @@ public class MenuItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItem> updateMenuItem(
+    public ResponseEntity<MenuItemResponseDTO> updateMenuItem(
             @PathVariable int id,
-            @RequestBody MenuItem menuItem) {
+            @RequestBody MenuItemRequestDTO request) {
 
-        MenuItem updatedMenuItem =
-                menuItemService.updateMenuItem(id, menuItem);
+        MenuItemResponseDTO updatedMenuItem =
+                menuItemService.updateMenuItem(id, request);
 
-        if (updatedMenuItem == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         return ResponseEntity.ok(updatedMenuItem);
     }
