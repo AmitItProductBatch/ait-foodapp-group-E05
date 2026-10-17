@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 
+import com.ait.app.requestbody.OrderCancelResponseDto;
 import com.ait.app.requestbody.OrderDetailsDto;
 import com.ait.app.requestbody.OrderHistoryDto;
 import com.ait.app.requestbody.OrderRequestDto;
@@ -22,4 +23,6 @@ public interface OrderService {
             String status,
             LocalDateTime fromDate,
             LocalDateTime toDate);
+    
+    OrderCancelResponseDto cancelOrder(Long orderId, Long userId);
 }

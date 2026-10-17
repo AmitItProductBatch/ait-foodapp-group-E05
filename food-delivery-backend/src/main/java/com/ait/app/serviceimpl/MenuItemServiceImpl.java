@@ -188,49 +188,54 @@ public List<CategoryMenuDto> getMenuByRestaurantId(int restaurantId) {
 
 	    return response;
 	}
+
+
 @Override
 public MenuItemResponseDTO updateMenuItem(int id, MenuItemRequestDTO request) {
+	
+	 Optional<MenuItem> menuItemOptional = menuItemRepository.findById(id);
 
-    Optional<MenuItem> menuItemOptional = menuItemRepository.findById(id);
+	    if (!menuItemOptional.isPresent()) {
+	        throw new MenuItemNotFoundException("Menu item not found with id: " + id);
+	    }
 
-    if (!menuItemOptional.isPresent()) {
-        throw new MenuItemNotFoundException("Menu item not found with id: " + id);
-    }
+	    Optional<Category> categoryOptional =
+	            categoryRepo.findById(request.getCategoryId());
 
-    Optional<Category> categoryOptional =
-            categoryRepo.findById(request.getCategoryId());
+	    if (!categoryOptional.isPresent()) {
+	        throw new IllegalArgumentException(
+	                "Category not found with id: " + request.getCategoryId());
+	    }
 
-    if (!categoryOptional.isPresent()) {
-        throw new IllegalArgumentException(
-                "Category not found with id: " + request.getCategoryId());
-    }
+	    Category category = categoryOptional.get();
 
-    Category category = categoryOptional.get();
+	    if (!category.isActive()) {
+	        throw new IllegalArgumentException("Category is inactive");
+	    }
 
-    if (!category.isActive()) {
-        throw new IllegalArgumentException("Category is inactive");
-    }
+	    MenuItem menuItem = menuItemOptional.get();
+	    menuItem.setName(request.getName());
+	    menuItem.setDescription(request.getDescription());
+	    menuItem.setPrice(request.getPrice());
+	    menuItem.setAvailability(request.getAvailability());
+	    menuItem.setCategory(category);
 
-    MenuItem menuItem = menuItemOptional.get();
-    menuItem.setName(request.getName());
-    menuItem.setDescription(request.getDescription());
-    menuItem.setPrice(request.getPrice());
-    menuItem.setAvailability(request.getAvailability());
-    menuItem.setCategory(category);
+	    MenuItem updatedMenuItem = menuItemRepository.save(menuItem);
 
-    MenuItem updatedMenuItem = menuItemRepository.save(menuItem);
+	    MenuItemResponseDTO response = new MenuItemResponseDTO();
+	    response.setId(updatedMenuItem.getId());
+	    response.setName(updatedMenuItem.getName());
+	    response.setDescription(updatedMenuItem.getDescription());
+	    response.setPrice(updatedMenuItem.getPrice());
+	    response.setAvailability(updatedMenuItem.getAvailability());
+	    response.setCategoryId(updatedMenuItem.getCategory().getId());
+	    response.setCategory(updatedMenuItem.getCategory().getCategoryName());
 
-    MenuItemResponseDTO response = new MenuItemResponseDTO();
-    response.setId(updatedMenuItem.getId());
-    response.setName(updatedMenuItem.getName());
-    response.setDescription(updatedMenuItem.getDescription());
-    response.setPrice(updatedMenuItem.getPrice());
-    response.setAvailability(updatedMenuItem.getAvailability());
-    response.setCategoryId(updatedMenuItem.getCategory().getId());
-    response.setCategory(updatedMenuItem.getCategory().getCategoryName());
+	    return response;
+	
+}
 
-    return response;
 }
 
 
-}
+
