@@ -9,5 +9,6 @@ import com.ait.app.model.Payment;
 public interface PaymentRepo extends JpaRepository<Payment, Long> {
 	
 	Optional<Payment> findByOrderId(Long orderId);
+	Payment findFirstByOrderIdOrderByIdDesc(Long orderId);
 
 }

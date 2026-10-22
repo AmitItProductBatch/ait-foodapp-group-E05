@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ait.app.requestbody.OrderCancelResponseDto;
 import com.ait.app.requestbody.OrderDetailsDto;
 import com.ait.app.requestbody.OrderHistoryDto;
 import com.ait.app.requestbody.OrderRequestDto;
@@ -82,5 +84,18 @@ public class OrderController {
         return new ResponseEntity<>(
                 orderHistory,
                 HttpStatus.OK);
+    }
+    
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderCancelResponseDto> cancelOrder(
+    		@PathVariable Long orderId,
+    		@RequestParam Long userId) {
+    	
+    	OrderCancelResponseDto response = os.cancelOrder(orderId, userId);
+    	
+    	return new ResponseEntity<>(
+    			response,
+    			HttpStatus.OK);
+    			
     }
 }

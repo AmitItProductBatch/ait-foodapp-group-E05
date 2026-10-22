@@ -21,10 +21,13 @@ import com.ait.app.model.CartItem;
 import com.ait.app.model.MenuItem;
 import com.ait.app.model.OrderItem;
 import com.ait.app.model.Orders;
+import com.ait.app.model.Payment;
 import com.ait.app.repository.CartItemRepository;
 import com.ait.app.repository.CartRepository;
 import com.ait.app.repository.MenuItemRepository;
 import com.ait.app.repository.OrderRepository;
+import com.ait.app.repository.PaymentRepo;
+import com.ait.app.requestbody.OrderCancelResponseDto;
 import com.ait.app.requestbody.OrderDetailsDto;
 import com.ait.app.requestbody.OrderHistoryDto;
 import com.ait.app.requestbody.OrderItemDetailsDto;
@@ -46,6 +49,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	CartItemRepository cir;
+	
+	@Autowired
+	PaymentRepo paymentRepo;
 
 	@Override
     @Transactional(isolation = Isolation.SERIALIZABLE) 
@@ -310,6 +316,77 @@ public class OrderServiceImpl implements OrderService{
 
 	        return dto;
 	    });
+	}
+
+	@Override
+	public OrderCancelResponseDto cancelOrder(Long orderId, Long userId) {
+		
+		if(userId == null) {
+			
+			throw new OrderServiceCustomException("User Id is required",
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		Orders order = or.findOrderById(orderId);
+		
+		if(order == null) {
+			throw new OrderServiceCustomException("Order Not Found",
+					HttpStatus.NOT_FOUND);
+		}
+		
+		if(!userId.equals(order.getUserId())) {
+			
+			throw new OrderServiceCustomException("You are not authorized to cancel this order",
+					HttpStatus.FORBIDDEN);
+		}
+		
+		String currentStatus = order.getStatus();
+		
+		if(!"PLACED".equals(currentStatus)
+				&& !"CONFIRMED".equals(currentStatus)
+				&& !"PREPARING".equals(currentStatus)) {
+			
+			throw new OrderServiceCustomException("Order cannot be cancelled because its current status is "
+					+ currentStatus,
+					HttpStatus.CONFLICT);
+		}
+		
+		order.setStatus("CANCELLED");
+		order.setUpdatedAt(LocalDateTime.now());
+		
+		Payment payment = paymentRepo.findFirstByOrderIdOrderByIdDesc(orderId);
+		
+		boolean paymentcaptured = "CAPTURED".equalsIgnoreCase(order.getPaymentStatus())
+				|| (payment != null
+				&& "CAPTURED".equalsIgnoreCase(payment.getStatus()));
+		
+		String message ="Order cancelled successfully";
+		
+		if(paymentcaptured) {
+			
+			order.setPaymentStatus("REFUND_PENDING");
+			
+			if(payment != null
+				&& "CAPTURED".equalsIgnoreCase(payment.getStatus())) {
+					
+					payment.setStatus("REFUND_PENDING");
+					paymentRepo.save(payment);
+				}
+			
+			message = "Order cancelled successfully. Refund is pending";
+		}
+		
+		or.save(order);
+		
+		OrderCancelResponseDto response = new OrderCancelResponseDto();
+		
+		response.setOrderId(order.getId());
+		response.setStatus(order.getStatus());
+		response.setPaymentStatus(order.getPaymentStatus());
+		response.setMessage(message);
+		
+		return response;
+		
 	}
 
 }
